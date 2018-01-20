@@ -1,0 +1,54 @@
+#Ignore build directories
+bin/*
+obj/*
+bld/*
+[Bb]in*/
+obj*/
+[Dd]ebug*/
+[Rr]elease*/
+
+# Ignore Visual Studio 2008 files
+*.obj
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.scc
+
+# Visual Studio 2015 cache/options directory
+.vs/*
+
+#Include binaries (build tools etc.)
+!*.exe
+!*.pdb
+!*.msi
+!*.tlb
+!*.dll
+
+#Other
+_ReSharper*/
+[Tt]est[Rr]esult*
+[Bb]uild[Ll]og.*
+*.shfbproj_*
+Doc\Help
+.metadata/*
+
+tools/NuGetPackages/
+tools/NMultiTool/(null)
+
+#.NET Core
+project.lock.json
+project.lock.json.deactivate
+
+examples/.vs/
