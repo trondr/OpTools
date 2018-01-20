@@ -1,0 +1,21 @@
+﻿<ProjectConfiguration>
+  <Settings>
+    <IgnoredTests>
+      <FixtureTestSelector>
+        <FixtureName>trondr.OpTools.Tests.IntegrationTests.AdminUser.AdminUserImpersonationTests</FixtureName>
+      </FixtureTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>trondr.OpTools.Tests.IntegrationTests.AdminUser.ExampleAdminUserIntegrationTests</FixtureName>
+      </FixtureTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>trondr.OpTools.Tests.IntegrationTests.ExampleIntegrationTests</FixtureName>
+      </FixtureTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>trondr.OpTools.Tests.IntegrationTests.StandardUser.ExampleStandardUserIntegrationTests</FixtureName>
+      </FixtureTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>trondr.OpTools.Tests.IntegrationTests.StandardUser.StandardUserImpersonationTests</FixtureName>
+      </FixtureTestSelector>
+    </IgnoredTests>
+  </Settings>
+</ProjectConfiguration>
