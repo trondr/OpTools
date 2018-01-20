@@ -6,12 +6,12 @@ using trondr.OpTools.Tests.Common;
 namespace trondr.OpTools.Tests.UnitTests.ContainerRegistrationTests.Module
 {
     [TestFixture(Category=TestCategory.UnitTests)]
-    public class ExampleCommandDefinitionRegistrationTests
+    public class RunScriptCommandDefinitionRegistrationTests
     {        
         [Test, RequiresSTA]
-        public static void ExampleCommandDefinitionRegistrationTest()
+        public static void RunScriptCommandDefinitionRegistrationTest()
         {
-            BootStrapperTestsHelper.CheckThatOneOfTheResolvedServicesAre<CommandDefinition, ExampleCommandDefinition>("Not registered: " + typeof(ExampleCommandDefinition).FullName);
+            BootStrapperTestsHelper.CheckThatOneOfTheResolvedServicesAre<CommandDefinition, RunScriptCommandDefinition>("Not registered: " + typeof(RunScriptCommandDefinition).FullName);
         }        
     }
 }

@@ -112,8 +112,8 @@
     <Compile Include="UnitTests\ContainerRegistrationTests\Infrastructure\NCmdLinerIApplicationInfoRegistrationTests.cs" />
     <Compile Include="UnitTests\ContainerRegistrationTests\Infrastructure\TraceLogAspectRegistrationTests.cs" />
     <Compile Include="UnitTests\ContainerRegistrationTests\Infrastructure\TypedFactoryComponentSelectorRegistrationTests.cs" />
-    <Compile Include="UnitTests\ContainerRegistrationTests\Module\ExampleCommandDefinitionRegistrationTests.cs" />
-    <Compile Include="UnitTests\ContainerRegistrationTests\Module\ExampleCommandProviderRegistrationTests.cs" />
+    <Compile Include="UnitTests\ContainerRegistrationTests\Module\RunScriptCommandDefinitionRegistrationTests.cs" />
+    <Compile Include="UnitTests\ContainerRegistrationTests\Module\RunScriptCommandProviderRegistrationTests.cs" />
     <Compile Include="UnitTests\ContainerRegistrationTests\Module\MainWindowViewModelRegistrationTests.cs" />
     <Compile Include="Common\TestCategory.cs" />
     <Compile Include="UnitTests\ContainerRegistrationTests\Module\MappingRegistrationTests.cs" />
