@@ -97,6 +97,7 @@
     <Compile Include="IntegrationTests\ExampleIntegrationTests.cs" />
     <Compile Include="IntegrationTests\StandardUser\ExampleStandardUserIntegrationTests.cs" />
     <Compile Include="IntegrationTests\StandardUser\StandardUserImpersonationTests.cs" />
+    <Compile Include="UnitTests\FTests.cs" />
     <Compile Include="UnitTests\ContainerRegistrationTests\Infrastructure\LoggingConfigurationRegistrationTests.cs" />
     <Compile Include="UnitTests\ContainerRegistrationTests\Infrastructure\NCmdLinerIMessengerRegistrationTests.cs" />
     <Compile Include="UnitTests\ContainerRegistrationTests\Infrastructure\TypeMapperRegistrationTests.cs" />
@@ -140,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AdminUserIntegrationTests\" />
+    <Folder Include="Module\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
