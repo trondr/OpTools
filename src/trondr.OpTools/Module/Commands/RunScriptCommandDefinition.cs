@@ -1,4 +1,8 @@
-﻿using NCmdLiner.Attributes;
+﻿using Akka.Actor;
+using Akka.DI.CastleWindsor;
+using Akka.DI.Core;
+using Castle.Windsor;
+using NCmdLiner.Attributes;
 using trondr.OpTools.Library.Infrastructure;
 using trondr.OpTools.Library.Module.Commands.RunScript;
 
@@ -7,10 +11,12 @@ namespace trondr.OpTools.Module.Commands
     public class RunScriptCommandDefinition: CommandDefinition
     {
         private readonly IRunScriptCommandProvider _runScriptCommandProvider;
-        
-        public RunScriptCommandDefinition(IRunScriptCommandProvider runScriptCommandProvider)
+        private readonly IWindsorContainer _windsorContainer;
+
+        public RunScriptCommandDefinition(IRunScriptCommandProvider runScriptCommandProvider, IWindsorContainer windsorContainer)
         {
-            _runScriptCommandProvider = runScriptCommandProvider;        
+            _runScriptCommandProvider = runScriptCommandProvider;
+            _windsorContainer = windsorContainer;
         }
 
         [Command(Description = "Run PowerShell script against all (or a random sample of) targets in a host name list. The online status (ping) of each host will be checked before attempting to run the script against a host. The script will run concurrently to speed up the overall processing time. The Powershell script it self supports two input parameters: The computer name or ip address of the target host 'HostName' and the result path 'ResultPath'. The powershell script is itself responsible for accessing the remote host and uploading the result to the given result path.", Summary = "Run PowerShell script against all (or a random sample of) targets in a host name list.")]
@@ -28,8 +34,14 @@ namespace trondr.OpTools.Module.Commands
             [OptionalCommandParameter(Description = "The number of concurrent script executions.",AlternativeName = "sep",DefaultValue = 10, ExampleValue = 10)]
             int scriptExecutionParallelism
             )
-        {            
-            return _runScriptCommandProvider.RunScript(scriptPath, hostNameListCsv, resultFolderPath, samplePercent, resolveToIpv4Address, scriptExecutionParallelism);
+        {
+            using (var runScriptActorSystem = ActorSystem.Create("RunScriptActorSystem"))
+            {
+                var windsorDependencyResolver = new WindsorDependencyResolver(_windsorContainer, runScriptActorSystem);
+                runScriptActorSystem.AddDependencyResolver(windsorDependencyResolver);
+                var exitCode = _runScriptCommandProvider.RunScript(scriptPath, hostNameListCsv, resultFolderPath, samplePercent, resolveToIpv4Address, scriptExecutionParallelism, runScriptActorSystem);
+                return exitCode;
+            }            
         }
     }
 }

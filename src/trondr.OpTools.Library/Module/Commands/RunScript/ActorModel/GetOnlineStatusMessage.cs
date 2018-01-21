@@ -1,9 +1,12 @@
-﻿using System.Net;
-
-namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel
+﻿namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel
 {
     public class GetOnlineStatusMessage
     {
-        public IPAddress IpAddress { get; set; }
+        public GetOnlineStatusMessage(IpAddress ipAddress)
+        {
+            IpAddress = ipAddress;
+        }
+
+        public IpAddress IpAddress { get; }
     }
 }
