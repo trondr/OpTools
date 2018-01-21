@@ -9,7 +9,7 @@ namespace trondr.OpTools.Tests.UnitTests.ContainerRegistrationTests.Module
     public class RunScriptCommandProviderRegistrationTests
     {        
         [Test, RequiresSTA]
-        public static void ExampleCommandProviderRegistrationTest()
+        public static void RunScriptCommandProviderRegistrationTest()
         {
             BootStrapperTestsHelper.CheckThatNumberOfResolvedServicesAre<IRunScriptCommandProvider>(1);
             BootStrapperTestsHelper.CheckThatResolvedServiceIsOfInstanceTypeName<IRunScriptCommandProvider>("IRunScriptCommandProviderProxy");

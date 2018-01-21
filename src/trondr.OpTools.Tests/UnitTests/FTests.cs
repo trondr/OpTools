@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using NUnit.Framework;
 using trondr.OpTools.Library.Module;
 using trondr.OpTools.Library.Module.Commands.RunScript;

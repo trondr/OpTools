@@ -1,14 +1,10 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading;
 using Akka.Actor;
 using Akka.DI.Core;
 using Common.Logging;
-using LanguageExt;
 using trondr.OpTools.Library.Infrastructure;
 using trondr.OpTools.Library.Module.Commands.RunScript.ActorModel;
+using trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors;
+using trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Messages;
 
 namespace trondr.OpTools.Library.Module.Commands.RunScript
 {
@@ -23,41 +19,34 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript
         
         public int RunScript(string scriptPath, string hostNameListCsv, string resultFolderPath, int samplePercent,
             bool resolveToIpv4Address, int scriptExecutionParallelism, ActorSystem runScriptActorSystem)
-        {            
-            var onlineStatusActor = runScriptActorSystem.ActorOf(runScriptActorSystem.DI().Props<OnlineStatusActor>());
-            //Get host names
-            var hostNameResults = GetHostNames(hostNameListCsv);            
-            foreach (var hostNameResult in hostNameResults)
+        {
+            var exitCode = 0;
+
+            _logger.Info("Starting run script coordinator");
+            var runScriptCoordinatorActor = runScriptActorSystem.ActorOf(runScriptActorSystem.DI().Props<RunScriptCoordinatorActor>(), "RunScriptCoordinatorActor");
+
+            _logger.Info("Parsing input parameters...");
+            var runScriptMessageResult = RunScriptMessage.Create(scriptPath, hostNameListCsv, resultFolderPath, samplePercent, resolveToIpv4Address,
+                scriptExecutionParallelism);
+
+            runScriptMessageResult.IfSucc(runScriptMessage =>
             {
-                hostNameResult.IfSucc(hostname =>
-                {
-                    var ipHostEntry = Dns.GetHostEntry(hostname.Value);
-                    var ipv4Address = ipHostEntry.AddressList.First(address => address.AddressFamily == AddressFamily.InterNetwork);
-                    var ipAddressResult = IpAddress.Create(ipv4Address.ToString());
-                    ipAddressResult.IfSucc(ipAddress =>
-                    {
-                        onlineStatusActor.Tell(new GetOnlineStatusMessage(ipAddress));
-                        _logger.Info($"TODO: {hostname.Value}");
-                    });
-                    ipAddressResult.IfFail(exception => { _logger.Error(exception.Message); });
-                });
-                hostNameResult.IfFail(exception =>
-                {
-                    _logger.Error($"{exception.Message}");
-                });
-            }
-            Thread.Sleep(10000);
-            runScriptActorSystem.Terminate().Wait();
-            //runScriptActorSystem.WhenTerminated.Wait();
-            ToDo.Implement(ToDoPriority.Critical,"trondr","Implement run script coordinator actor");
-            return 0;
+                _logger.Info($"Tell run script coordinator to start processing. Message: {runScriptMessage}...");
+                runScriptCoordinatorActor.Tell(runScriptMessage);
+            });
+            
+            runScriptMessageResult.IfFail(exception =>
+            {
+                _logger.Error($"Failed to parse input parameters. {exception.Message}");
+                runScriptActorSystem.Terminate();
+                exitCode = 1;
+            });
+
+            _logger.Info("Waiting for run script processing to finish");
+            runScriptActorSystem.WhenTerminated.Wait();            
+            return exitCode;
         }
 
-        private IEnumerable<Result<Hostname>> GetHostNames(string hostNameListCsv)
-        {
-            yield return Hostname.Create("localhost");
-            yield return Hostname.Create("127.0.0.1");
-            yield return Hostname.Create("127.0.0.1.2");
-        }
+        
     }
 }

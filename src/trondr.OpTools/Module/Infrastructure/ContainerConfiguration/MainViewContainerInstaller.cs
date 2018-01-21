@@ -1,8 +1,6 @@
-﻿using System;
-using Castle.MicroKernel.Registration;
+﻿using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-using trondr.OpTools.Infrastructure;
 using trondr.OpTools.Infrastructure.ContainerExtensions;
 using trondr.OpTools.Library.Module.ViewModels;
 using trondr.OpTools.Library.Module.Views;
@@ -10,7 +8,7 @@ using trondr.OpTools.Library.Module.Views;
 namespace trondr.OpTools.Module.Infrastructure.ContainerConfiguration
 {
     [InstallerPriority(InstallerPriorityAttribute.DefaultPriority)]
-    public class ExampleContainerInstaller: IWindsorInstaller
+    public class MainViewContainerInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
@@ -18,20 +16,6 @@ namespace trondr.OpTools.Module.Infrastructure.ContainerConfiguration
             container.Register(Component.For<MainWindow>().Activator<StrictComponentActivator>());
             container.Register(Component.For<MainView>().Activator<StrictComponentActivator>());
             container.Register(Component.For<MainViewModel>().Activator<StrictComponentActivator>());
-
-            //Factory registrations example:
-
-            //container.Register(Component.For<ITeamProviderFactory>().AsFactory());
-            //container.Register(
-            //    Component.For<ITeamProvider>()
-            //        .ImplementedBy<CsvTeamProvider>()
-            //        .Named("CsvTeamProvider")
-            //        .LifeStyle.Transient);
-            //container.Register(
-            //    Component.For<ITeamProvider>()
-            //        .ImplementedBy<SqlTeamProvider>()
-            //        .Named("SqlTeamProvider")
-            //        .LifeStyle.Transient);
         }
     }
 }
