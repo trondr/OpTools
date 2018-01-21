@@ -3,7 +3,7 @@ using LanguageExt;
 
 namespace trondr.OpTools.Library.Module.Commands.RunScript
 {
-    public class Hostname
+    public class Hostname : Record<Hostname>
     {
         public string Value { get; }
 

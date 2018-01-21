@@ -3,7 +3,7 @@ using LanguageExt;
 
 namespace trondr.OpTools.Library.Module.Commands.RunScript
 {
-    public class IpAddress
+    public class IpAddress: Record<IpAddress>
     {
         private IpAddress(string ipAddress)
         {
