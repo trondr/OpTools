@@ -37,7 +37,14 @@ namespace trondr.OpTools.Infrastructure.ContainerExtensions
             {
                 return obj.ToString();
             }
-            return JsonConvert.SerializeObject(obj);
+            try
+            {
+                return JsonConvert.SerializeObject(obj);
+            }
+            catch (JsonSerializationException)
+            {
+                return obj.GetType().FullName;
+            }            
         }
     }
 }
