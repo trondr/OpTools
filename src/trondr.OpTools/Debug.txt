@@ -1,2 +1,2 @@
 ﻿Help
-CreateSomething /exampleParameter="c:\temp"
+RunScript /scriptPath="c:\temp\test.ps1" /hostNameListCsv="c:\temp\hostnames.csv" /resultFolderPath="c:\temp" /samplePercent="100" /resolveToIpv4Address="False" /scriptExecutionParallelism="10"

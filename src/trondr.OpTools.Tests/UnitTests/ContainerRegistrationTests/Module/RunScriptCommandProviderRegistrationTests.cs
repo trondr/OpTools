@@ -15,6 +15,5 @@ namespace trondr.OpTools.Tests.UnitTests.ContainerRegistrationTests.Module
             BootStrapperTestsHelper.CheckThatResolvedServiceIsOfInstanceTypeName<IRunScriptCommandProvider>("IRunScriptCommandProviderProxy");
             BootStrapperTestsHelper.CheckThatResolvedServiceHasSingletonLifeCycle<IRunScriptCommandProvider>();
         }
-
     }
 }

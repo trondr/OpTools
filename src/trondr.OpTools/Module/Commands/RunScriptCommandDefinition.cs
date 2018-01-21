@@ -14,10 +14,10 @@ namespace trondr.OpTools.Module.Commands
         }
 
         [Command(Description = "Run PowerShell script against all (or a random sample of) targets in a host name list. The online status (ping) of each host will be checked before attempting to run the script against a host. The script will run concurrently to speed up the overall processing time. The Powershell script it self supports two input parameters: The computer name or ip address of the target host 'HostName' and the result path 'ResultPath'. The powershell script is itself responsible for accessing the remote host and uploading the result to the given result path.", Summary = "Run PowerShell script against all (or a random sample of) targets in a host name list.")]
-        public int RunPsScript(
+        public int RunScript(
             [RequiredCommandParameter(Description = "Path to the Powershell script.", AlternativeName = "pss", ExampleValue = @"c:\temp\test.ps1")]
             string scriptPath,
-            [RequiredCommandParameter(Description = "Path to the csv file with list of host names to run the Powershell script against. Csv format: HostName.", AlternativeName = "rfp", ExampleValue = @"c:\temp\hostnames.csv")]
+            [RequiredCommandParameter(Description = "Path to the csv file with list of host names to run the Powershell script against. Csv format: HostName.", AlternativeName = "hnl", ExampleValue = @"c:\temp\hostnames.csv")]
             string hostNameListCsv,
             [RequiredCommandParameter(Description = "Result folder path. Each script execution can upload the result to this path.", AlternativeName = "rfp", ExampleValue = @"c:\temp")]
             string resultFolderPath,
