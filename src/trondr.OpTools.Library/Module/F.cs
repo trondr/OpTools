@@ -17,5 +17,10 @@ namespace trondr.OpTools.Library.Module
         {
             return Valid952HostnameRegex.IsMatch(hostName) || ValidIpAddressRegex.IsMatch(hostName);
         }
+
+        public static bool IsValidIpAddress(string ipAdress)
+        {
+            return ValidIpAddressRegex.IsMatch(ipAdress);
+        }
     }
 }

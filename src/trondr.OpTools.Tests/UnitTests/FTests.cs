@@ -16,5 +16,17 @@ namespace trondr.OpTools.Tests.UnitTests
             var actual = F.IsValidHostName(hostName);
             Assert.AreEqual(expected, actual, $"{hostName}");
         }
+
+
+        [Test]
+        [TestCase("hostname", false)]
+        [TestCase("1hostname", false)]
+        [TestCase("127.1.0.2.2", false)]
+        [TestCase("127.1.0.2", true)]
+        public void IsValidIpAddressTest(string ipAddress, bool expected)
+        {
+            var actual = F.IsValidIpAddress(ipAddress);
+            Assert.AreEqual(expected, actual, $"{ipAddress}");
+        }
     }
 }
