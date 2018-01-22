@@ -89,9 +89,8 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
             {
                 hostNameResult.IfSucc(hostname =>
                 {
-                    var ipHostEntry = Dns.GetHostEntry(hostname.Value);
-                    var ipv4Address = ipHostEntry.AddressList.First(address => address.AddressFamily == AddressFamily.InterNetwork);
-                    var ipAddressResult = IpAddress.Create(ipv4Address.ToString());
+                    
+                    var ipAddressResult = F.HostName2IpAddress(hostname);
                     ipAddressResult.IfSucc(ipAddress =>
                     {
                         var localHostName = hostname;

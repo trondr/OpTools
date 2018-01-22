@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
+using LanguageExt;
 using trondr.OpTools.Library.Module.Commands.RunScript;
 
 namespace trondr.OpTools.Library.Module
@@ -48,6 +51,21 @@ namespace trondr.OpTools.Library.Module
                     yield return onLineHostsArray[indexToReturn];
                     returnedHostsCount++;
                 }
+            }            
+        }
+
+        public static Result<IpAddress> HostName2IpAddress(Hostname hostname)
+        {
+            try
+            {
+                var ipHostEntry = Dns.GetHostEntry(hostname.Value);
+                var ipv4Address = ipHostEntry.AddressList.First(address => address.AddressFamily == AddressFamily.InterNetwork);
+                var ipAddressResult = IpAddress.Create(ipv4Address.ToString());
+                return ipAddressResult;
+            }
+            catch (Exception ex)
+            {
+                return new Result<IpAddress>(new ArgumentException($"Failed to look up '{hostname.Value}' in the DNS. {ex.Message}"));
             }            
         }
     }

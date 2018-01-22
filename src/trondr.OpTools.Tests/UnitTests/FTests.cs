@@ -183,5 +183,18 @@ namespace trondr.OpTools.Tests.UnitTests
             return ipAddress;
         }
 
+
+        [Test]
+        [TestCase("localhost", "127.0.0.1", false)]
+        public void Hostname2IpAddressTest(string hostNameString, string ipaddressExpected, bool expecteddIsFaulted)
+        {
+            var hostName = GetHostName(hostNameString);
+            var actual = F.HostName2IpAddress(hostName);
+            Assert.IsFalse(actual.IsFaulted);
+            actual.IfSucc(actualIpAddress =>
+            {
+                Assert.AreEqual(ipaddressExpected, actualIpAddress.Value);
+            });
+        }
     }
 }
