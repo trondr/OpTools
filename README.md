@@ -59,6 +59,24 @@ RunScript                    Run PowerShell script against all (or a random
    Example: trondr.OpTools.exe RunScript /scriptPath="c:\temp\test.ps1" /hostNameListCsv="c:\temp\hostnames.csv" /resultFolderPath="c:\temp" /samplePercent="100" /resolveToIpv4Address="False" /scriptExecutionParallelism="10" 
    Example (alternative): trondr.OpTools.exe RunScript /pss="c:\temp\test.ps1" /hnl="c:\temp\hostnames.csv" /rfp="c:\temp" /sp="100" /rip="False" /sep="10" 
 ```
+  
+## Powershell script example
+
+```powershell
+param (
+    [Parameter(Mandatory=$true)]
+    [string]$HostName,
+    [Parameter(Mandatory=$true)]
+    [string]$ResultFolderPath
+    )
+
+Set-StrictMode -Version Latest
+Write-Host "HostName=$HostName"
+Write-Host "ResultFolderPath=$ResultFolderPath"
+$resultFileName = $HostName + "_result_wmic.txt"
+$resultFilePath = [System.IO.Path]::Combine($ResultFolderPath,$resultFileName)
+wmic /node:$HostName qfe list full > $resultFilePath
+```   
    
 ## Minimum Build Requirements
 
