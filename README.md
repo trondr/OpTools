@@ -17,29 +17,28 @@ Help                         Display this help text
 License                      Display license
 Credits                      Display credits
 RunScript                    Run PowerShell script against all (or a random
-                             sample of) targets in a host name list.
+                             sample of) targets in a host list.
 
 Commands and parameters:
 ------------------------
 RunScript                    Run PowerShell script against all (or a random
-                             sample of) targets in a host name list. The
-                             online status (ping) of each host will be
-                             checked before attempting to run the script
-                             against a host. The script will run concurrently
-                             to speed up the overall processing time. The
-                             Powershell script should supports two input
-                             parameters: The computer name or ip address of
-                             the target host 'HostName' and the result path
-                             'ResultFolderPath'. The powershell script is by
-                             it self responsible for accessing the remote
-                             host and uploading the result to the given
-                             result path.
+                             sample of) targets in a host list. The online
+                             status (ping) of each host will be checked
+                             before attempting to run the script. The script
+                             will run concurrently to speed up the overall
+                             processing time. The Powershell script should
+                             supports two input parameters: The computer name
+                             or ip address of the target host 'HostName' and
+                             the result path 'ResultFolderPath'. The
+                             powershell script is itself responsible for
+                             accessing the remote host and uploading the
+                             result to the given result path.
    /scriptPath               [Required] Path to the Powershell script.
-                             Alternative parameter name: /pss
-   /hostNameListCsv          [Required] Path to the csv file with list of
-                             host names to run the Powershell script against.
-                             Csv format: HostName. Alternative parameter
-                             name: /hnl
+                             Alternative parameter name: /sp
+   /hostNameListCsv          [Required] Path to a csv file with list of host
+                             names to run the Powershell script against. Csv
+                             format: HostName. Alternative parameter name:
+                             /hnl
    /resultFolderPath         [Required] Result folder path. Each script
                              execution can upload the result to this path.
                              Alternative parameter name: /rfp
@@ -57,7 +56,8 @@ RunScript                    Run PowerShell script against all (or a random
                              Default value: 10
 
    Example: trondr.OpTools.exe RunScript /scriptPath="c:\temp\test.ps1" /hostNameListCsv="c:\temp\hostnames.csv" /resultFolderPath="c:\temp" /samplePercent="100" /resolveToIpv4Address="False" /scriptExecutionParallelism="10" 
-   Example (alternative): trondr.OpTools.exe RunScript /pss="c:\temp\test.ps1" /hnl="c:\temp\hostnames.csv" /rfp="c:\temp" /sp="100" /rip="False" /sep="10" 
+   Example (alternative): trondr.OpTools.exe RunScript /sp="c:\temp\test.ps1" /hnl="c:\temp\hostnames.csv" /rfp="c:\temp" /sp="100" /rip="False" /sep="10" 
+
 ```
 
 ## Powershell script template

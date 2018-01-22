@@ -130,6 +130,7 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
 
         private IEnumerable<Result<Hostname>> GetHostNames(string hostNameListCsv)
         {
+            ToDo.Implement(ToDoPriority.Critical,"trondr","Implement Csv parsing from file");
             yield return Hostname.Create("localhost");
             yield return Hostname.Create("127.0.0.1");
             yield return Hostname.Create("localhost");
