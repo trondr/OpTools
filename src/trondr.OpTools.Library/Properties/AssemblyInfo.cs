@@ -17,10 +17,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("github.com.trondr Op Tools")]
 [assembly: AssemblyCompany("github.com.trondr")]
 [assembly: AssemblyProduct("trondr.OpTools.Library")]
-[assembly: AssemblyCopyright("Copyright © github.com.trondr 2017")]
+[assembly: AssemblyCopyright("Copyright © github.com.trondr 2018")]
 [assembly: CLSCompliant(false)]
-[assembly: AssemblyInformationalVersion("1.0.17294.1.")]
-[assembly: AssemblyVersion("1.0.17294.1")]
-[assembly: AssemblyFileVersion("1.0.17294.1")]
+[assembly: AssemblyInformationalVersion("1.0.18022.2.1091f1a")]
+[assembly: AssemblyVersion("1.0.18022.2")]
+[assembly: AssemblyFileVersion("1.0.18022.2")]
 
 
