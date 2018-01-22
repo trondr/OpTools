@@ -19,6 +19,7 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
         {
             Logger.Warning($"Simulating running script '{message.ScriptPath}' on {message.Host.HostName}");
             Thread.Sleep(2000);
+            Sender.Tell(new RunScriptOnHostIsDoneMessage(message.Host));
         }
     }
 }

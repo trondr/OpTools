@@ -125,6 +125,7 @@
     <Compile Include="Infrastructure\ITypeMapper.cs" />
     <Compile Include="Infrastructure\LifeStyles\TrancientAttribute.cs" />
     <Compile Include="Infrastructure\TypeMapper.cs" />
+    <Compile Include="Module\Commands\RunScript\ActorModel\Messages\RunScriptOnHostIsDoneMessage.cs" />
     <Compile Include="Module\Commands\RunScript\ActorModel\Messages\GetOnlineStatusMessage.cs" />
     <Compile Include="Module\Commands\RunScript\ActorModel\Actors\OnlineStatusActor.cs" />
     <Compile Include="Module\Commands\RunScript\ActorModel\Messages\OnLineStatusCheckIsDoneMessage.cs" />

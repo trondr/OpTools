@@ -19,6 +19,8 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
         private int _numerOfOnlineStatusMessagesReceived;        
         private int _totalNumberOfHostsToCheck;
         private RunScriptMessage _runScriptMessage;
+        private int _runScriptsOnHostsCount;
+        private int _runScriptsOnHostsDoneCount;
 
         public RunScriptCoordinatorActor()
         {
@@ -26,10 +28,23 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
             Receive<OnlineStatusMessage>(message => HandleOnlineStatusMessage(message));
             Receive<OnLineStatusCheckIsDoneMessage>(message => HandleOnLineStatusCheckIsDoneMessage());
             Receive<ProcessingIsDoneMessage>(message => HandleProcessingIsDoneMessage());
+            Receive<RunScriptOnHostIsDoneMessage>(message => HandleRunScriptOnHostIsDoneMessage(message));
+        }
+
+        private void HandleRunScriptOnHostIsDoneMessage(RunScriptOnHostIsDoneMessage message)
+        {
+            Logger.Info($"Finished running script on {message.Host.HostName.Value}");
+            _runScriptsOnHostsDoneCount++;
+            if (_runScriptsOnHostsDoneCount >= _runScriptsOnHostsCount)
+            {
+                Logger.Info("Processing is done!");
+                Self.Tell(new ProcessingIsDoneMessage());
+            }
         }
 
         private void HandleProcessingIsDoneMessage()
         {
+            Logger.Info("Terminating...");
             Context.System.Terminate();
         }
 
@@ -39,16 +54,20 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
             var props = Context.DI().Props<RunScriptOnHostActor>().WithRouter(new SmallestMailboxPool(_runScriptMessage.ScriptExecutionParallelism));
             var runScriptOnHostActorPool = Context.ActorOf(props, "RunScriptOnHostActorPool");
             Logger.Info($"Running script '{_runScriptMessage.ScriptPath}' on {onlineHostsToProcess.Count} hosts");
+            _runScriptsOnHostsCount = 0;
             foreach (var host in onlineHostsToProcess)
             {
                 runScriptOnHostActorPool.Tell(new RunScriptOnHostMessage(host,_runScriptMessage.ScriptPath,_runScriptMessage.ResultFolderPath));
+                _runScriptsOnHostsCount++;
             }
         }
         private void SetState(RunScriptMessage runScriptMessage)
         {
             _numerOfOnlineStatusMessagesReceived = 0;            
             _totalNumberOfHostsToCheck = 0;
-            _hosts.Clear();
+            _runScriptsOnHostsCount = 0;
+            _runScriptsOnHostsDoneCount = 0;
+        _hosts.Clear();
             _runScriptMessage = runScriptMessage;
         }
 
@@ -94,7 +113,11 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
                         var localIpAddress = ipAddress;
                         onlineStatusActorPool.Tell(new GetOnlineStatusMessage(new Host(localHostName, localIpAddress, OnlineStatus.Unknown)));
                     });
-                    ipAddressResult.IfFail(exception => { Logger.Error(exception.Message); });
+                    ipAddressResult.IfFail(exception =>
+                    {
+                        Logger.Error(exception.Message);
+                        _totalNumberOfHostsToCheck--;
+                    });
                 });
                 hostNameResult.IfFail(exception =>
                 {
@@ -102,8 +125,7 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
                     _totalNumberOfHostsToCheck--;
                 });
             }
-            ToDo.Implement(ToDoPriority.Critical, "trondr", "Implement run script coordinator run script");
-            ToDo.Implement(ToDoPriority.Critical, "trondr", "Implement run script coordinator actor termination");
+            Logger.Info($"Ended up checking online status of {_totalNumberOfHostsToCheck} host names.");
         }
 
         private IEnumerable<Result<Hostname>> GetHostNames(string hostNameListCsv)
