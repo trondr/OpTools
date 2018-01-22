@@ -19,7 +19,7 @@ namespace trondr.OpTools.Module.Commands
             _windsorContainer = windsorContainer;
         }
 
-        [Command(Description = "Run PowerShell script against all (or a random sample of) targets in a host name list. The online status (ping) of each host will be checked before attempting to run the script against a host. The script will run concurrently to speed up the overall processing time. The Powershell script should supports two input parameters: The computer name or ip address of the target host 'HostName' and the result path 'ResultPath'. The powershell script is by it self responsible for accessing the remote host and uploading the result to the given result path.", Summary = "Run PowerShell script against all (or a random sample of) targets in a host name list.")]
+        [Command(Description = "Run PowerShell script against all (or a random sample of) targets in a host name list. The online status (ping) of each host will be checked before attempting to run the script against a host. The script will run concurrently to speed up the overall processing time. The Powershell script should supports two input parameters: The computer name or ip address of the target host 'HostName' and the result path 'ResultFolderPath'. The powershell script is by it self responsible for accessing the remote host and uploading the result to the given result path.", Summary = "Run PowerShell script against all (or a random sample of) targets in a host name list.")]
         public int RunScript(
             [RequiredCommandParameter(Description = "Path to the Powershell script.", AlternativeName = "pss", ExampleValue = @"c:\temp\test.ps1")]
             string scriptPath,

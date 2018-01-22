@@ -57,7 +57,7 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
             _runScriptsOnHostsCount = 0;
             foreach (var host in onlineHostsToProcess)
             {
-                runScriptOnHostActorPool.Tell(new RunScriptOnHostMessage(host,_runScriptMessage.ScriptPath,_runScriptMessage.ResultFolderPath));
+                runScriptOnHostActorPool.Tell(new RunScriptOnHostMessage(host,_runScriptMessage.ScriptPath,_runScriptMessage.ResultFolderPath,_runScriptMessage.ResolveToIpv4Address));
                 _runScriptsOnHostsCount++;
             }
         }
