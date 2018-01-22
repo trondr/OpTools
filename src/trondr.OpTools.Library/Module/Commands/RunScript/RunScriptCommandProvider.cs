@@ -2,7 +2,6 @@ using Akka.Actor;
 using Akka.DI.Core;
 using Common.Logging;
 using trondr.OpTools.Library.Infrastructure;
-using trondr.OpTools.Library.Module.Commands.RunScript.ActorModel;
 using trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors;
 using trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Messages;
 

@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
 using Akka.Actor;
 using Akka.DI.Core;
 using Akka.Event;
@@ -89,7 +87,6 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
             {
                 hostNameResult.IfSucc(hostname =>
                 {
-                    
                     var ipAddressResult = F.HostName2IpAddress(hostname);
                     ipAddressResult.IfSucc(ipAddress =>
                     {
