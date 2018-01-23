@@ -18,15 +18,11 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
         private void HandleGetOnLineStatusMessage(GetOnlineStatusMessage message)
         {
             var ipAddressResult = F.HostName2IpAddress(message.HostName);
-            
-
             ipAddressResult.IfSucc(ipAddress =>
             {
                 var onlineStatusMessage = PingHost(message.HostName, ipAddress);
-
                 if (Logger.IsDebugEnabled) Logger.Debug($"Sending on line status message result '{onlineStatusMessage}' back to sender {Context.Sender.Path}");
-                Sender.Tell(onlineStatusMessage);
-                
+                Sender.Tell(onlineStatusMessage);                
             });
             ipAddressResult.IfFail(exception =>
             {
