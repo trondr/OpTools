@@ -27,7 +27,7 @@ namespace trondr.OpTools.Module.Commands
             string hostNameListCsv,
             [RequiredCommandParameter(Description = "Result folder path. Each script execution can upload the result to this path.", AlternativeName = "rfp", ExampleValue = @"c:\temp")]
             string resultFolderPath,
-            [OptionalCommandParameter(Description = "Specify a samplePercent less than 100 to run the script against a random sample of the host names in the host list. A value of 100 (default) means the script will run against all host names in the list.", AlternativeName = "sp", DefaultValue = 100, ExampleValue = 100)]
+            [OptionalCommandParameter(Description = "Specify a samplePercent less than 100 to run the script against a random sample of the host names in the host list. A value of 100 (default) means the script will run against all host names in the list.", AlternativeName = "sap", DefaultValue = 100, ExampleValue = 100)]
             int samplePercent,
             [OptionalCommandParameter(Description = "Resolve host name to ip v4 address before executing script.",AlternativeName = "rip",DefaultValue = false, ExampleValue = false)]
             bool resolveToIpv4Address,
