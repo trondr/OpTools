@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Akka.Actor;
 using Akka.DI.Core;
@@ -96,36 +98,63 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
             SetState(runScriptMessage);
             var props = Context.DI().Props<OnlineStatusActor>().WithRouter(new SmallestMailboxPool(runScriptMessage.ScriptExecutionParallelism));
             var onlineStatusActorPool = Context.ActorOf(props, "OnlineStatusActorPool");
-
-            Logger.Info("Get host names...");
-            var hostNameResults = GetHostNames(runScriptMessage.HostNameListCsv).ToList();
-
-            _totalNumberOfHostsToCheck = hostNameResults.Count;
-            Logger.Info($"Checking online status of {_totalNumberOfHostsToCheck} host names...");
-            foreach (var hostNameResult in hostNameResults)
+            
+            var hostNamesResult = GetHostNames(runScriptMessage.HostNameListCsv);
+            hostNamesResult.IfSucc(hostNames =>
             {
-                hostNameResult.IfSucc(hostname =>
+                _totalNumberOfHostsToCheck = hostNames.Count;
+                if (_totalNumberOfHostsToCheck == 0)
                 {
-                    onlineStatusActorPool.Tell(new GetOnlineStatusMessage(hostname));                    
+                    Logger.Info("Nothing to do.");
+                    Self.Tell(new ProcessingIsDoneMessage());
+                    return;
+                }
+                Logger.Info($"Checking online status of {_totalNumberOfHostsToCheck} host names...");
+                foreach (var hostName in hostNames)
+                {
+                    onlineStatusActorPool.Tell(new GetOnlineStatusMessage(hostName));                    
+                }
+            });
+            hostNamesResult.IfFail(exception =>
+            {
+                Logger.Error($"Failed to parse csv file '{runScriptMessage.HostNameListCsv}'. {exception.Message}");
+                Self.Tell(new ProcessingIsDoneMessage());
+            });            
+        }
+
+        private Result<List<HostName>> GetHostNames(string hostNameListCsv)
+        {
+            Logger.Info($"Loading host names from csv file '{hostNameListCsv}'...");
+
+            var hostNames = new List<HostName>();
+            
+            if(!File.Exists(hostNameListCsv))
+                return new Result<List<HostName>>(new FileNotFoundException("Host name list csv file not found",hostNameListCsv));
+
+            var fullFileName = Path.GetFullPath(hostNameListCsv);
+            var fileLines = File.ReadAllLines(fullFileName);
+
+            if(fileLines.Length <= 1)
+                return new Result<List<HostName>>(new InvalidDataException("Host name list csv file is empty"));
+
+            if(fileLines[0] != "HostName")
+                return new Result<List<HostName>>(new FormatException("The one and only column name in the host name list csv file must be 'HostName'."));
+            
+            for (var i = 1; i < fileLines.Length; i++)
+            {
+                var hostNameRaw = fileLines[i].Trim();
+                var hostNameResult =  HostName.Create(hostNameRaw);
+                hostNameResult.IfSucc(hostName =>
+                {
+                    hostNames.Add(hostName);
                 });
                 hostNameResult.IfFail(exception =>
                 {
-                    Logger.Error($"{exception.Message}");
-                    _totalNumberOfHostsToCheck--;
+                    Logger.Error($"Invalid host name. {exception.Message}");                    
                 });
             }
-            Logger.Info($"Ended up checking online status of {_totalNumberOfHostsToCheck} host names.");
-        }
-
-        private IEnumerable<Result<HostName>> GetHostNames(string hostNameListCsv)
-        {
-            ToDo.Implement(ToDoPriority.Critical,"trondr","Implement Csv parsing from file");
-            yield return HostName.Create("localhost");
-            yield return HostName.Create("127.0.0.1");
-            yield return HostName.Create("localhost");
-            yield return HostName.Create("127.0.0.1");
-            yield return HostName.Create("adrdc01trix");
-            yield return HostName.Create("127.0.0.1.2");
+            Logger.Info($"Loaded {hostNames.Count} host names from csv file.");
+            return hostNames;
         }
     }
 }
