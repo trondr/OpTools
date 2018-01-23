@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using Akka.Actor;
 using Akka.Event;
 using trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Messages;
@@ -21,15 +20,21 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
         private void HandleRunScriptOnHostMessage(RunScriptOnHostMessage message)
         {
             var hostName = message.ResolveToIpv4Address ? message.Host.IpAddress.Value: message.Host.HostName.Value;
-            Logger.Warning($"Simulating running script on {hostName} : '{message.ScriptPath}' /HostName={hostName} /ResultFolderPath={message.ResultFolderPath}");
-            var process =  Process.Start(GetPowerShellExe(), $"-ExecutionPolicy ByPass -File \"{message.ScriptPath}\" -HostName {hostName} -ResultFolderPath {message.ResultFolderPath}");
-            if (process != null)
+            Logger.Info($"Running script on {hostName} : '{message.ScriptPath}' -HostName=\"{hostName}\" -ResultFolderPath=\"{message.ResultFolderPath}\"");
+            var process = new Process
             {
-                process.OutputDataReceived += (sender, args) => { Logger.Info(args.Data); };
-                process.ErrorDataReceived += (sender, args) => { Logger.Error(args.Data); };
-                process.Exited += (sender, args) => { Logger.Error(process.ExitCode.ToString()); };
-                process.WaitForExit();
-            }            
+                StartInfo =
+                {
+                    FileName = GetPowerShellExe(),
+                    Arguments = $"-ExecutionPolicy ByPass -File \"{message.ScriptPath}\" -HostName {hostName} -ResultFolderPath {message.ResultFolderPath}"
+                },
+                EnableRaisingEvents = true
+            };
+            process.OutputDataReceived += (sender, args) => { Logger.Info(args.Data); };
+            process.ErrorDataReceived += (sender, args) => { Logger.Error(args.Data); };
+            process.Exited += (sender, args) => { Logger.Info($"Script on {hostName} returned {process.ExitCode.ToString()}"); };
+            process.Start();
+            process.WaitForExit();            
             Sender.Tell(new RunScriptOnHostIsDoneMessage(message.Host));
         }
 
