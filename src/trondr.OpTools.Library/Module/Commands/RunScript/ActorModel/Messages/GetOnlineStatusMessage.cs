@@ -2,11 +2,11 @@
 {
     public class GetOnlineStatusMessage
     {
-        public GetOnlineStatusMessage(Host host)
+        public GetOnlineStatusMessage(HostName hostName)
         {
-            Host = host;
+            HostName = hostName;
         }
 
-        public Host Host { get; }
+        public HostName HostName { get; }
     }
 }

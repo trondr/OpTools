@@ -18,5 +18,7 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript
                 return new Result<IpAddress>(new IpAddress(ipAdress));
             return new Result<IpAddress>(new InvalidOperationException($"'{ipAdress}' is not a valid ip address."));
         }
+
+        public static IpAddress Empty = new IpAddress("0.0.0.0");
     }
 }

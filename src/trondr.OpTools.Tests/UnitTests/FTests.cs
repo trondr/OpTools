@@ -127,7 +127,7 @@ namespace trondr.OpTools.Tests.UnitTests
             Assert.AreEqual(expected: 7, actual: actual.Count, message: "Number of hosts");
         }
 
-        private Dictionary<Hostname, Host> GetTestHosts8of10IsOnline()
+        private Dictionary<HostName, Host> GetTestHosts8of10IsOnline()
         {
             var hostName01 = GetHostName("computer01");
             var hostName02 = GetHostName("computer02");
@@ -151,7 +151,7 @@ namespace trondr.OpTools.Tests.UnitTests
             var ipAddress09 = GetIpAddress("192.168.1.109");
             var ipAddress10 = GetIpAddress("192.168.1.110");
 
-            var testHosts = new Dictionary<Hostname, Host>()
+            var testHosts = new Dictionary<HostName, Host>()
             {
                 {hostName01, new Host(hostName01, ipAddress01, OnlineStatus.Online)},
                 {hostName02, new Host(hostName02, ipAddress02, OnlineStatus.Offline)},
@@ -169,10 +169,10 @@ namespace trondr.OpTools.Tests.UnitTests
         }
 
 
-        Hostname GetHostName(string hostNameString)
+        HostName GetHostName(string hostNameString)
         {
-            Hostname hostName = null;
-            Hostname.Create(hostNameString).IfSucc(hostname => hostName = hostname);
+            HostName hostName = null;
+            HostName.Create(hostNameString).IfSucc(hostname => hostName = hostname);
             return hostName;
         }
 

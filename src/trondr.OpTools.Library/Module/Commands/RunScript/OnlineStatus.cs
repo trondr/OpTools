@@ -2,8 +2,9 @@
 {
     public enum OnlineStatus
     {
-        Unknown,
+        NotChecked,
         Online,
-        Offline
+        Offline,
+        UnknownHost
     }
 }

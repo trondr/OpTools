@@ -25,7 +25,7 @@ namespace trondr.OpTools.Library.Module
             return ValidIpAddressRegex.IsMatch(ipAdress);
         }
 
-        public static IEnumerable<Host> GetOnlineHostsToProcess(Dictionary<Hostname, Host> hosts, int samplePercent)
+        public static IEnumerable<Host> GetOnlineHostsToProcess(Dictionary<HostName, Host> hosts, int samplePercent)
         {
             var onlineHosts = hosts
                 .Where(pair => pair.Value.OnlineStatus == OnlineStatus.Online)
@@ -54,18 +54,18 @@ namespace trondr.OpTools.Library.Module
             }            
         }
 
-        public static Result<IpAddress> HostName2IpAddress(Hostname hostname)
+        public static Result<IpAddress> HostName2IpAddress(HostName hostName)
         {
             try
             {
-                var ipHostEntry = Dns.GetHostEntry(hostname.Value);
+                var ipHostEntry = Dns.GetHostEntry(hostName.Value);
                 var ipv4Address = ipHostEntry.AddressList.First(address => address.AddressFamily == AddressFamily.InterNetwork);
                 var ipAddressResult = IpAddress.Create(ipv4Address.ToString());
                 return ipAddressResult;
             }
             catch (Exception ex)
             {
-                return new Result<IpAddress>(new ArgumentException($"Failed to look up '{hostname.Value}' in the DNS. {ex.Message}"));
+                return new Result<IpAddress>(new ArgumentException($"Failed to look up '{hostName.Value}' in the DNS. {ex.Message}"));
             }            
         }
     }

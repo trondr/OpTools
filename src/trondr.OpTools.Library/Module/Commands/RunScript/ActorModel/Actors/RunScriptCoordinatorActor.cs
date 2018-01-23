@@ -14,7 +14,7 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
     {
         private ILoggingAdapter Logger => _logger ?? (_logger = Context.GetLogger());
 
-        private Dictionary<Hostname, Host> _hosts = new Dictionary<Hostname, Host>();        
+        private Dictionary<HostName, Host> _hosts = new Dictionary<HostName, Host>();        
         private ILoggingAdapter _logger;
         private int _numerOfOnlineStatusMessagesReceived;        
         private int _totalNumberOfHostsToCheck;
@@ -106,18 +106,7 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
             {
                 hostNameResult.IfSucc(hostname =>
                 {
-                    var ipAddressResult = F.HostName2IpAddress(hostname);
-                    ipAddressResult.IfSucc(ipAddress =>
-                    {
-                        var localHostName = hostname;
-                        var localIpAddress = ipAddress;
-                        onlineStatusActorPool.Tell(new GetOnlineStatusMessage(new Host(localHostName, localIpAddress, OnlineStatus.Unknown)));
-                    });
-                    ipAddressResult.IfFail(exception =>
-                    {
-                        Logger.Error(exception.Message);
-                        _totalNumberOfHostsToCheck--;
-                    });
+                    onlineStatusActorPool.Tell(new GetOnlineStatusMessage(hostname));                    
                 });
                 hostNameResult.IfFail(exception =>
                 {
@@ -128,15 +117,15 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
             Logger.Info($"Ended up checking online status of {_totalNumberOfHostsToCheck} host names.");
         }
 
-        private IEnumerable<Result<Hostname>> GetHostNames(string hostNameListCsv)
+        private IEnumerable<Result<HostName>> GetHostNames(string hostNameListCsv)
         {
             ToDo.Implement(ToDoPriority.Critical,"trondr","Implement Csv parsing from file");
-            yield return Hostname.Create("localhost");
-            yield return Hostname.Create("127.0.0.1");
-            yield return Hostname.Create("localhost");
-            yield return Hostname.Create("127.0.0.1");
-            yield return Hostname.Create("adrdc01trix");
-            yield return Hostname.Create("127.0.0.1.2");
+            yield return HostName.Create("localhost");
+            yield return HostName.Create("127.0.0.1");
+            yield return HostName.Create("localhost");
+            yield return HostName.Create("127.0.0.1");
+            yield return HostName.Create("adrdc01trix");
+            yield return HostName.Create("127.0.0.1.2");
         }
     }
 }
