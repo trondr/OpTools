@@ -7,7 +7,6 @@ using Akka.DI.Core;
 using Akka.Event;
 using Akka.Routing;
 using LanguageExt;
-using trondr.OpTools.Library.Infrastructure;
 using trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Messages;
 
 namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
@@ -53,6 +52,12 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
         private void HandleOnLineStatusCheckIsDoneMessage()
         {
             var onlineHostsToProcess = F.GetOnlineHostsToProcess(_hosts,_runScriptMessage.SamplePercent).ToList();
+            if (onlineHostsToProcess.Count == 0)
+            {
+                Logger.Info("Nothing to do.");
+                Self.Tell(new ProcessingIsDoneMessage());
+                return;
+            }
             var props = Context.DI().Props<RunScriptOnHostActor>().WithRouter(new SmallestMailboxPool(_runScriptMessage.ScriptExecutionParallelism));
             var runScriptOnHostActorPool = Context.ActorOf(props, "RunScriptOnHostActorPool");
             Logger.Info($"Running script '{_runScriptMessage.ScriptPath}' on {onlineHostsToProcess.Count} hosts");
