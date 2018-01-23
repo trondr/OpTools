@@ -14,6 +14,9 @@ namespace trondr.OpTools
         [STAThread]
         static int Main(string[] args)
         {
+            AppDomain.CurrentDomain.AssemblyResolve += new AssemblyResolver().ResolveHandler;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+
             int returnValue;
             try
             {                
@@ -21,11 +24,16 @@ namespace trondr.OpTools
             }
             catch (Exception ex)
             {
-                var message = string.Format("Fatal error when wiring up the application.{0}{1}", Environment.NewLine, ex);
+                var message = $"Fatal error when wiring up the application.{Environment.NewLine}{ex}";
                 WriteErrorToEventLog(message);
                 returnValue = 3;
             }
             return returnValue;
+        }
+
+        private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
+        {
+            WriteErrorToEventLog(unhandledExceptionEventArgs.ExceptionObject.ToString());
         }
 
         private static int WireUpAndRun(string[] args)

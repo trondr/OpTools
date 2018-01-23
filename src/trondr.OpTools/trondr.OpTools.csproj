@@ -146,6 +146,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyResolver.cs" />
     <Compile Include="Infrastructure\BootStrapper.cs" />
     <Compile Include="Infrastructure\ContainerConfiguration\ContainerInstallerDefault.cs" />
     <Compile Include="Infrastructure\ContainerConfiguration\ContainerInstallerLast.cs" />
@@ -207,6 +208,32 @@
     <EmbeddedResource Include="License\09. Json.NET License.xml" />
     <EmbeddedResource Include="License\10. RhinoMocks License.xml" />
     <EmbeddedResource Include="License\11. NUnit License.xml" />
+    <EmbeddedResource Include="Libs\Akka.DI.CastleWindsor.dll" />
+    <EmbeddedResource Include="Libs\Akka.DI.Core.dll" />
+    <EmbeddedResource Include="Libs\Akka.dll" />
+    <EmbeddedResource Include="Libs\Akka.Logger.CommonLogging.dll" />
+    <EmbeddedResource Include="Libs\Akka.Logger.log4net.dll" />
+    <EmbeddedResource Include="Libs\AutoMapper.dll" />
+    <EmbeddedResource Include="Libs\Castle.Core.dll" />
+    <EmbeddedResource Include="Libs\Castle.Windsor.dll" />
+    <EmbeddedResource Include="Libs\Common.Logging.Core.dll" />
+    <EmbeddedResource Include="Libs\Common.Logging.dll" />
+    <EmbeddedResource Include="Libs\Common.Logging.Log4Net208.dll" />
+    <EmbeddedResource Include="Libs\CommonServiceLocator.dll" />
+    <EmbeddedResource Include="Libs\GalaSoft.MvvmLight.dll" />
+    <EmbeddedResource Include="Libs\GalaSoft.MvvmLight.Extras.dll" />
+    <EmbeddedResource Include="Libs\GalaSoft.MvvmLight.Platform.dll" />
+    <EmbeddedResource Include="Libs\LanguageExt.Core.dll" />
+    <EmbeddedResource Include="Libs\log4net.dll" />
+    <EmbeddedResource Include="Libs\NCmdLiner.dll" />
+    <EmbeddedResource Include="Libs\Newtonsoft.Json.dll" />
+    <EmbeddedResource Include="Libs\System.Collections.Immutable.dll" />
+    <EmbeddedResource Include="Libs\System.Reactive.Core.dll" />
+    <EmbeddedResource Include="Libs\System.Reactive.Interfaces.dll" />
+    <EmbeddedResource Include="Libs\System.Reactive.Linq.dll" />
+    <EmbeddedResource Include="Libs\System.ValueTuple.dll" />
+    <EmbeddedResource Include="Libs\System.Windows.Interactivity.dll" />
+    <EmbeddedResource Include="Libs\trondr.OpTools.Library.dll" />
     <Content Include="NCmdLiner.ico" />
     <Content Include="References.txt" />
   </ItemGroup>
@@ -225,6 +252,9 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PreBuildEvent>xcopy "$(OutDir)*.dll" "$(ProjectDir)\Libs" /Y</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
