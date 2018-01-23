@@ -26,7 +26,7 @@ namespace trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors
                 StartInfo =
                 {
                     FileName = GetPowerShellExe(),
-                    Arguments = $"-ExecutionPolicy ByPass -File \"{message.ScriptPath}\" -HostName {hostName} -ResultFolderPath {message.ResultFolderPath}"
+                    Arguments = $"-ExecutionPolicy ByPass -File \"{message.ScriptPath}\" -HostName \"{hostName}\" -ResultFolderPath \"{message.ResultFolderPath}\""
                 },
                 EnableRaisingEvents = true
             };
