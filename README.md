@@ -47,7 +47,7 @@ RunScript                    Run PowerShell script against all (or a random
                              host names in the host list. A value of 100
                              (default) means the script will run against all
                              host names in the list. Alternative parameter
-                             name: /sp. Default value: 100
+                             name: /sap. Default value: 100
    /resolveToIpv4Address     [Optional] Resolve host name to ip v4 address
                              before executing script. Alternative parameter
                              name: /rip. Default value: False
@@ -56,7 +56,7 @@ RunScript                    Run PowerShell script against all (or a random
                              Default value: 10
 
    Example: trondr.OpTools.exe RunScript /scriptPath="c:\temp\test.ps1" /hostNameListCsv="c:\temp\hostnames.csv" /resultFolderPath="c:\temp" /samplePercent="100" /resolveToIpv4Address="False" /scriptExecutionParallelism="10" 
-   Example (alternative): trondr.OpTools.exe RunScript /sp="c:\temp\test.ps1" /hnl="c:\temp\hostnames.csv" /rfp="c:\temp" /sp="100" /rip="False" /sep="10" 
+   Example (alternative): trondr.OpTools.exe RunScript /sp="c:\temp\test.ps1" /hnl="c:\temp\hostnames.csv" /rfp="c:\temp" /sap="100" /rip="False" /sep="10" 
 
 ```
 
@@ -95,7 +95,16 @@ Write-Host "HostName=$HostName"
 Write-Host "ResultFolderPath=$ResultFolderPath"
 $resultFileName = $HostName + "_result_wmic.txt"
 $resultFilePath = [System.IO.Path]::Combine($ResultFolderPath,$resultFileName)
-wmic /node:$HostName qfe list full > $resultFilePath
+wmic /node:$HostName qfe list full > "$resultFilePath"
+```   
+   
+## Host list csv example
+
+```csv
+HostName
+192.168.1.54
+192.168.1.101
+machine01
 ```   
    
 ## Minimum Build Requirements
