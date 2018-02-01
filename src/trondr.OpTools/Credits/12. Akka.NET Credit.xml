@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CreditInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ProductName>Akka.NET</ProductName>
+  <ProductHome>https://github.com/akkadotnet/akka.net</ProductHome>
+  <CreditText>trondr.OpTools uses Akka.Net to provide an actor model for concurrent and message driven operations.</CreditText>
+</CreditInfo>
