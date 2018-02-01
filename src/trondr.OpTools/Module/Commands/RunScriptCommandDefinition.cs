@@ -10,12 +10,12 @@ namespace trondr.OpTools.Module.Commands
 {
     public class RunScriptCommandDefinition : CommandDefinition
     {
-        private readonly IRunScriptCommandProvider _runScriptCommandProvider;
+        private readonly IRunScriptCommandProviderFactory _runScriptCommandProviderFactory;
         private readonly IWindsorContainer _windsorContainer;
 
-        public RunScriptCommandDefinition(IRunScriptCommandProvider runScriptCommandProvider, IWindsorContainer windsorContainer)
-        {
-            _runScriptCommandProvider = runScriptCommandProvider;
+        public RunScriptCommandDefinition(IRunScriptCommandProviderFactory runScriptCommandProviderFactory, IWindsorContainer windsorContainer)
+        {            
+            _runScriptCommandProviderFactory = runScriptCommandProviderFactory;
             _windsorContainer = windsorContainer;
         }
 
@@ -39,7 +39,8 @@ namespace trondr.OpTools.Module.Commands
             {
                 var windsorDependencyResolver = new WindsorDependencyResolver(_windsorContainer, runScriptActorSystem);
                 runScriptActorSystem.AddDependencyResolver(windsorDependencyResolver);
-                var exitCode = _runScriptCommandProvider.RunScript(scriptPath, hostNameListCsv, resultFolderPath, samplePercent, resolveToIpv4Address, scriptExecutionParallelism, runScriptActorSystem);
+                var runScriptCommandProvider = _runScriptCommandProviderFactory.GetRunScriptCommandProvider();
+                var exitCode = runScriptCommandProvider.RunScript(scriptPath, hostNameListCsv, resultFolderPath, samplePercent, resolveToIpv4Address, scriptExecutionParallelism, runScriptActorSystem);
                 return exitCode;
             }
         }
