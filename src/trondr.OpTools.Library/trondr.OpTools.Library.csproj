@@ -138,7 +138,13 @@
     <Compile Include="Module\Commands\RunScript\Hostname.cs" />
     <Compile Include="Module\Commands\RunScript\IpAddress.cs" />
     <Compile Include="Module\Commands\RunScript\ActorModel\Messages\RunScriptMessage.cs" />
+    <Compile Include="Module\Commands\RunScript\IRunScriptCommandProviderFactory.cs" />
     <Compile Include="Module\Commands\RunScript\OnlineStatus.cs" />
+    <Compile Include="Module\Commands\ScanFolders\IScanFoldersCommandProviderFactory.cs" />
+    <Compile Include="Module\Commands\ScanFolders\IScanFoldersCommandProvider.cs" />
+    <Compile Include="Module\Commands\ScanFolders\ScanFoldersCommandProvider.cs" />
+    <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\ScanFoldersMessage.cs" />
+    <Compile Include="Module\Commands\ScanFolders\ActorModel\Actors\ScanFoldersCoordinatorActor.cs" />
     <Compile Include="Module\Common\Install\IWindowsExplorerContextMenuInstaller.cs" />
     <Compile Include="Module\Common\Install\WindowsExplorerContextMenuInstaller.cs" />
     <Compile Include="Infrastructure\CommandProvider.cs" />

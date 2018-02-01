@@ -165,11 +165,13 @@
     <Compile Include="Infrastructure\NotepadMessenger.cs" />
     <Compile Include="Module\Commands\RunScriptCommandDefinition.cs" />
     <Compile Include="Infrastructure\ContainerExtensions\TraceLogAspect.cs" />
+    <Compile Include="Module\Commands\ScanFoldersCommandDefinition.cs" />
     <Compile Include="Module\Infrastructure\ContainerConfiguration\MainViewContainerInstaller.cs" />
     <Compile Include="Module\Infrastructure\ContainerConfiguration\OnlineStatusActorContainerInstaller.cs" />
     <Compile Include="Module\Infrastructure\ContainerConfiguration\RunScriptCommandProviderFactoryInstaller.cs" />
     <Compile Include="Module\Infrastructure\ContainerConfiguration\RunScriptCoordinatorActorContainerInstaller.cs" />
     <Compile Include="Module\Infrastructure\ContainerConfiguration\RunScriptOnHostActorContainerInstaller.cs" />
+    <Compile Include="Module\Infrastructure\ContainerConfiguration\ScanFoldersCommandProviderFactoryInstaller.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Module\CustomInstaller.cs">
