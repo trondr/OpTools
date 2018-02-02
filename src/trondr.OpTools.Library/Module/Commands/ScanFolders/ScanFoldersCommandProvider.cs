@@ -34,13 +34,14 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders
 
             scanFoldersMessageResult.IfFail(exception =>
             {
-                _logger.Error($"Failed to parse input parameters. {exception.Message}");
+                _logger.Error($"Invalid input parameter. {exception.Message} Terminating.");                
                 scanFoldersActorSystem.Terminate();
                 exitCode = 1;
             });
 
-            _logger.Info("Waiting for run script processing to finish");
+            _logger.Info("Waiting for scan folders actor system to terminate...");
             scanFoldersActorSystem.WhenTerminated.Wait();
+            _logger.Info("Actor system has terminated!");
             return exitCode;
         }
     }
