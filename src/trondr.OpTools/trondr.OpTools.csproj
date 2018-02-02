@@ -171,7 +171,9 @@
     <Compile Include="Module\Infrastructure\ContainerConfiguration\RunScriptCommandProviderFactoryInstaller.cs" />
     <Compile Include="Module\Infrastructure\ContainerConfiguration\RunScriptCoordinatorActorContainerInstaller.cs" />
     <Compile Include="Module\Infrastructure\ContainerConfiguration\RunScriptOnHostActorContainerInstaller.cs" />
+    <Compile Include="Module\Infrastructure\ContainerConfiguration\ScanFolderActorContainerInstaller.cs" />
     <Compile Include="Module\Infrastructure\ContainerConfiguration\ScanFoldersCommandProviderFactoryInstaller.cs" />
+    <Compile Include="Module\Infrastructure\ContainerConfiguration\ScanFoldersCoordinatorActorContainerInstaller.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Module\CustomInstaller.cs">
