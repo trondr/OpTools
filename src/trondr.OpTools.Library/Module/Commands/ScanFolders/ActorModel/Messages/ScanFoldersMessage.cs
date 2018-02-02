@@ -5,7 +5,7 @@ using LanguageExt;
 
 namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Messages
 {
-    public class ScanFoldersMessage
+    public class ScanFoldersMessage: Record<ScanFoldersMessage>
     {
         public string[] UncPathsToScan { get; }
         public string LocalDataFolder { get; }
@@ -30,7 +30,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Messages
             if (uncPathsToScan == null || uncPathsToScan.Length == 0)
                 return new Result<ScanFoldersMessage>(new ArgumentNullException($"Parameter UncPathsToScan input array is empty or null."));
 
-            var uncPathsToScanNotExisting = uncPathsToScan.Select(s => !Directory.Exists(s)).ToList();
+            var uncPathsToScanNotExisting = uncPathsToScan.Where(s => !Directory.Exists(s)).ToList();
             if (uncPathsToScanNotExisting.Count > 0)
             {
                 return new Result<ScanFoldersMessage>(new DirectoryNotFoundException($"UncPathsToScan not existing: {string.Join(", ",uncPathsToScanNotExisting)}"));
