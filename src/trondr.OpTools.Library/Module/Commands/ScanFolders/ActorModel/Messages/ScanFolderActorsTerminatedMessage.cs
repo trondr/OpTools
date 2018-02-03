@@ -1,8 +1,6 @@
 ﻿namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
 {
-    internal enum ScanFolderActorStatus
+    internal class ScanFolderActorsTerminatedMessage
     {
-        Terminated,
-        Running
     }
 }

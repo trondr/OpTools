@@ -67,6 +67,6 @@ namespace trondr.OpTools.Library.Module
             {
                 return new Result<IpAddress>(new ArgumentException($"Failed to look up '{hostName.Value}' in the DNS. {ex.Message}"));
             }            
-        }
+        }        
     }
 }

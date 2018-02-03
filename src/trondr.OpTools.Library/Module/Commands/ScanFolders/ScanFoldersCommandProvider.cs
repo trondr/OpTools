@@ -1,4 +1,6 @@
-﻿using Akka.Actor;
+﻿using System.Threading.Tasks;
+using Akka;
+using Akka.Actor;
 using Akka.DI.Core;
 using Common.Logging;
 using trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors;
@@ -20,28 +22,31 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders
         {
             var exitCode = 0;
 
-            _logger.Info("Starting scan folders coordinator");
+            _logger.Info("Starting scan folders actor coordinator");
             var scanFoldersCoordinatorActor = scanFoldersActorSystem.ActorOf(scanFoldersActorSystem.DI().Props<ScanFoldersCoordinatorActor>(), "ScanFoldersCoordinatorActor");
-
+            
             _logger.Info("Parsing input parameters...");
             var scanFoldersMessageResult = ScanFoldersMessage.Create(uncPathsToScan, localDataFolder, uploadDataFolder);
 
             scanFoldersMessageResult.IfSucc(scanFoldersMessage =>
             {
-                _logger.Info($"Tell run script coordinator to start processing. Message: {scanFoldersMessage}...");
+                _logger.Info($"Tell {typeof(ScanFoldersCoordinatorActor).Name} to start processing. Message: {scanFoldersMessage}...");
                 scanFoldersCoordinatorActor.Tell(scanFoldersMessage);
+                _logger.Info("Waiting for scan folders actor system to terminate...");
+                scanFoldersActorSystem.WhenTerminated.Wait();
+                _logger.Info("Actor system has terminated!");
+                exitCode = scanFoldersMessage.ExitCode;
             });
 
             scanFoldersMessageResult.IfFail(exception =>
             {
                 _logger.Error($"Invalid input parameter. {exception.Message} Terminating.");                
                 scanFoldersActorSystem.Terminate();
+                _logger.Info("Waiting for scan folders actor system to terminate...");
+                scanFoldersActorSystem.WhenTerminated.Wait();
+                _logger.Info("Actor system has terminated!");
                 exitCode = 1;
             });
-
-            _logger.Info("Waiting for scan folders actor system to terminate...");
-            scanFoldersActorSystem.WhenTerminated.Wait();
-            _logger.Info("Actor system has terminated!");
             return exitCode;
         }
     }

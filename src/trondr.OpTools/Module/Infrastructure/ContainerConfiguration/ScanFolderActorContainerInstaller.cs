@@ -2,7 +2,6 @@
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using trondr.OpTools.Infrastructure.ContainerExtensions;
-using trondr.OpTools.Library.Module.Commands.RunScript.ActorModel.Actors;
 using trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors;
 
 namespace trondr.OpTools.Module.Infrastructure.ContainerConfiguration

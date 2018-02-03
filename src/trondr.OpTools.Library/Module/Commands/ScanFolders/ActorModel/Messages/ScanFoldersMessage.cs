@@ -10,12 +10,14 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Messages
         public string[] UncPathsToScan { get; }
         public string LocalDataFolder { get; }
         public string UploadDataFolder { get; }
+        public int ExitCode { get; set; }
 
         private ScanFoldersMessage(string[] uncPathsToScan, string localDataFolder, string uploadDataFolder)
         {
             UncPathsToScan = uncPathsToScan;
             LocalDataFolder = localDataFolder;
             UploadDataFolder = uploadDataFolder;
+            ExitCode = 0;
         }
 
         public static Result<ScanFoldersMessage> Create(string[] uncPathsToScan, string localDataFolder,
