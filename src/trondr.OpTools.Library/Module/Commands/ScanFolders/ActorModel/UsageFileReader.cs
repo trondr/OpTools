@@ -17,7 +17,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel
             UsageFileUtil.ParseHeader(_sr.ReadLine());
         }
 
-        public IEnumerable<UsageRecordMessage> ReadAllSecurityRecord()
+        public IEnumerable<UsageRecordMessage> GetAllRecords()
         {
             while (_sr.Peek() >= 0)
             {

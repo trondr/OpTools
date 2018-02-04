@@ -22,6 +22,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
         private bool _checkIfDone;
         private long _total;
         private IActorRef _processFolderActorRouter;
+        private IActorRef _processSecurityCoordinatorActor;
 
         public ScanFoldersCoordinatorActor()
         {        
@@ -75,6 +76,11 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
             Receive<UsageWriterActorTerminatedMessage>(message =>
             {
                 Logger.Info($"{typeof(UsageWriterActor).Name} has terminated. Request stop of {typeof(ScanFoldersCoordinatorActor).Name}");
+                _processSecurityCoordinatorActor = CreateProcessSecurityCoordinatorActor();                
+            });
+            Receive<ProcessSecurityCoordinatorActorTerminatedMessage>(message =>
+            {
+                Logger.Info($"{typeof(ProcessSecurityCoordinatorActor).Name} has terminated. Request stop of {typeof(ScanFoldersCoordinatorActor).Name}");
                 Context.Self.Tell(new StopScanFoldersCoordinatorActorMessage());
             });
             Receive<StopScanFoldersCoordinatorActorMessage>(message => 
@@ -89,13 +95,31 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
                 Context.Self.Tell(new StopScanFoldersCoordinatorActorMessage());
             });
         }
-        
+
+        private IActorRef CreateProcessSecurityCoordinatorActor()
+        {
+            var actor = Context.ActorOf(Context.DI().Props<ProcessSecurityCoordinatorActor>());
+
+            var localDataFile = Path.Combine(_scanFoldersMessage.LocalDataFolder,"Security.csv");
+            var uploadDataFile = Path.Combine(_scanFoldersMessage.UploadDataFolder, "Security.csv");
+            var localUsageDataFile = GetUsageDataFile(_scanFoldersMessage.LocalDataFolder);
+            actor.Tell(new ProcessSecurityCoordinatorActorOpenMessage(localDataFile, uploadDataFile, _scanFoldersMessage.OverWrite,localUsageDataFile));
+            Logger.Info($"Watch {typeof(ProcessSecurityCoordinatorActor).Name} for termination.");
+            Context.WatchWith(actor, new ProcessSecurityCoordinatorActorTerminatedMessage());
+            return actor;
+        }
+
+        private string GetUsageDataFile(string dataFolder)
+        {
+            return Path.Combine(dataFolder, "FolderUsage.csv");
+        }
+
         private void OnHandleScanFoldersMessage(ScanFoldersMessage message)
         {
             Become(Busy);
             _scanFoldersMessage = message;
-            var localDataFile = Path.Combine(message.LocalDataFolder, "FolderUsage.csv");
-            var uploadDataFile = Path.Combine(message.UploadDataFolder, "FolderUsage.csv");
+            var localDataFile = GetUsageDataFile(message.LocalDataFolder);
+            var uploadDataFile = GetUsageDataFile(message.UploadDataFolder);
             _usageWriterActor = CreateUsageWriterActor(localDataFile, uploadDataFile, message.OverWrite);
             _processFolderActorRouter = CreateProcessFolderActorRouter(message.DegreeOfParallelism);
             var scanFoldersActors = new ScanFoldersActors(Self, _usageWriterActor);
@@ -152,5 +176,9 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
             });
             base.PostStop();
         }
+    }
+
+    public class ProcessSecurityCoordinatorActorTerminatedMessage
+    {
     }
 }

@@ -24,7 +24,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel
         public static UsageRecordMessage ParseRecord(string csvLine)
         {
             var values = csvLine.Split(';');
-            if (values.Length != 8)
+            if (values.Length != 6)
                 throw new InvalidDataException($"Csv line '{csvLine}' is not on the expected format of 6 columns: '{GetCsvHeader()}'");
             return new UsageRecordMessage(values[0].Trim('"'), values[1].Trim('"'), values[2].Trim('"'), values[3].Trim('"'), values[4].Trim('"'), values[5].Trim('"'));
         }

@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Messages;
 
 namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel
@@ -34,6 +37,19 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel
             if (csvHeaderLine != expectedHeader)
             {
                 throw new InvalidDataException($"Header in was expected to be '{expectedHeader}' but was '{csvHeaderLine}'");
+            }
+        }
+
+        public static IEnumerable<SecurityAccessRuleRecordMessage> GetSecurityAccessRuleRecords(string sddl)
+        {
+            if(string.IsNullOrWhiteSpace(sddl)) yield break;
+
+            var directorySecurity = new DirectorySecurity();
+            directorySecurity.SetSecurityDescriptorSddlForm(sddl);
+            var accessRules = directorySecurity.GetAccessRules(true, true, typeof(NTAccount));
+            foreach (FileSystemAccessRule rule in accessRules)
+            {
+                yield return new SecurityAccessRuleRecordMessage(rule.AccessControlType.ToString(), rule.IdentityReference.Value, rule.FileSystemRights.ToString(), rule.IsInherited.ToString(), rule.InheritanceFlags.ToString(), rule.PropagationFlags.ToString());
             }
         }
     }

@@ -10,7 +10,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
         private ILoggingAdapter _logger;
         private ILoggingAdapter Logger => _logger ?? (_logger = Context.GetLogger());
         private SecurityFileWriter _securityFileWriter;
-        private OnOpenSecurityWriterActorMessage _message;
+        private SecurityWriterActorOpenMessage _message;
 
         public SecurityWriterActor()
         {
@@ -20,23 +20,23 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
         #region Behaviours
         private void Initializing()
         {
-            Receive<OnOpenSecurityWriterActorMessage>(message => { OnOpen(message); });
+            Receive<SecurityWriterActorOpenMessage>(message => { OnOpen(message); });
         }
         
         private void Opened()
         {
-            Receive<OnOpenSecurityWriterActorMessage>(message => { Logger.Error($"{GetType().Name} has allready been initialized."); });
+            Receive<SecurityWriterActorOpenMessage>(message => { Logger.Error($"{GetType().Name} has allready been initialized."); });
             Receive<SecurityRecordMessage>(message => { _securityFileWriter.WriteSecurityRecord(message); });
-            Receive<OnCloseSecurityWriterActorMessage>(message => { OnClose(); });
-            Receive<OnUploadSecurityWriterActorMessage>(message => Logger.Error($"Uable to upload security data file because {GetType().Name} has not been closed."));
+            Receive<SecurityWriterActorCloseMessage>(message => { OnClose(); });
+            Receive<SecurityWriterActorUploadMessage>(message => Logger.Error($"Uable to upload security data file because {GetType().Name} has not been closed."));
         }
 
         private void Closed()
         {
-            Receive<OnOpenSecurityWriterActorMessage>(message => { Logger.Error($"{GetType().Name} has been closed and cannot be reopened."); });
+            Receive<SecurityWriterActorOpenMessage>(message => { Logger.Error($"{GetType().Name} has been closed and cannot be reopened."); });
             Receive<SecurityRecordMessage>(message => { Logger.Error($"{GetType().Name} has been closed and cannot write more {typeof(SecurityRecordMessage).Namespace}'s."); });
-            Receive<OnCloseSecurityWriterActorMessage>(message => { Logger.Error($"{GetType().Name} has allready been closed."); });
-            Receive<OnUploadSecurityWriterActorMessage>(message => OnUpload());
+            Receive<SecurityWriterActorCloseMessage>(message => { Logger.Error($"{GetType().Name} has allready been closed."); });
+            Receive<SecurityWriterActorUploadMessage>(message => OnUpload());
         }
         #endregion
 
@@ -47,7 +47,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
             Become(Closed);
         }
 
-        private void OnOpen(OnOpenSecurityWriterActorMessage message)
+        private void OnOpen(SecurityWriterActorOpenMessage message)
         {
             if (File.Exists(message.LocalSecurityDataFile) && !message.Overwrite)
             {
