@@ -11,9 +11,10 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
         private ILoggingAdapter Logger => _logger ?? (_logger = Context.GetLogger());
 
         private string _localDataFile;        
-        private StreamWriter _sw;
+        
         private string _uploadDataFile;
         private bool _overWrite;
+        private UsageFileWriter _usageFileWriter;
 
 
         public UsageWriterActor()
@@ -38,12 +39,12 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
         {
             Receive<UsageWriterActorOpenMessage>(message =>
             {
-                Logger.Error($"Local data file is allready open");
+                Logger.Error($"Local data file {_localDataFile} is allready open");
             });
             Receive<UsageWriterActorCloseMessage>(message => { OnClose(); });
             Receive<UsageRecordMessage>(message =>
             {
-                _sw.WriteLine(GetCsvLine(message.Hostname, message.Size, message.Path, message.Sddl,message.IsProtected ,message.Comment));                
+                _usageFileWriter.WriteRecord(message);                
             });
             Receive<UsageWriterActorUploadMessage>(message =>
             {
@@ -88,50 +89,31 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
                 return;
             }
             Logger.Info($"Opening output data file '{_localDataFile}'");
-            _sw = new StreamWriter(_localDataFile);
-            _sw.WriteLine(GetCsvHeader());
-            _sw.AutoFlush = true;
+            _usageFileWriter = new UsageFileWriter(_localDataFile);            
             Become(LocalDataFileOpened);
         }
 
         private void OnClose()
         {
-            CloseFile(ref _sw);
+            CloseFile(ref _usageFileWriter);
             Become(LocalDataFileClosed);            
         }
 
-        private void CloseFile(ref StreamWriter sw)
+        private void CloseFile(ref UsageFileWriter usageFileWriter)
         {
-            if (sw == null) return;
-            Logger.Info($"Closing local data file '{_localDataFile}'");
-            sw.Close();
-            sw.Dispose();
-            sw = null;            
+            if (usageFileWriter == null) return;
+            Logger.Info($"Closing local data file '{_localDataFile}'");            
+            usageFileWriter.Dispose();
+            usageFileWriter = null;            
         }
 
         protected override void PostStop()
         {
-            CloseFile(ref _sw);
+            CloseFile(ref _usageFileWriter);
             Logger.Info($"{GetType().Name}({Self.Path}) has stopped.");
             base.PostStop();
         }
 
-        private string GetCsvHeader()
-        {
-            return GetCsvLine("Hostname","Size","Path","Sddl","IsProtected","Comment");
-        }
-
-        private string GetCsvLine(string hostName, string size, string path, string sddl, string isProtected,
-            string comment)
-        {
-            return $"{Q(hostName)};{Q(size)};{Q(path)};{Q(sddl)};{Q(isProtected)};{Q(comment)}";
-        }
-
-        private string Q(string value)
-        {
-            return $"\"{value}\"";
-        }
-        
         private void OnFailed(string message, int exitCode)
         {
             Logger.Error(message);

@@ -143,6 +143,13 @@
     <Compile Include="Module\Commands\RunScript\ActorModel\Messages\RunScriptMessage.cs" />
     <Compile Include="Module\Commands\RunScript\IRunScriptCommandProviderFactory.cs" />
     <Compile Include="Module\Commands\RunScript\OnlineStatus.cs" />
+    <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\OnCloseSecurityWriterActorMessage.cs" />
+    <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\OnUploadSecurityWriterActorMessage.cs" />
+    <Compile Include="Module\Commands\ScanFolders\ActorModel\UsageFileWriter.cs" />
+    <Compile Include="Module\Commands\ScanFolders\ActorModel\SecurityFileWriter.cs" />
+    <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\SecurityRecordMessage.cs" />
+    <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\OnOpenSecurityWriterActorMessage.cs" />
+    <Compile Include="Module\Commands\ScanFolders\ActorModel\Actors\SecurityWriterActor.cs" />
     <Compile Include="Module\Common\DirectorySecurityExensions.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\CheckIfDoneMessage.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\ProcessedFolderMessage.cs" />
