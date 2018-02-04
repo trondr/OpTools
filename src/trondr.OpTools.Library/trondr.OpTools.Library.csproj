@@ -143,6 +143,7 @@
     <Compile Include="Module\Commands\RunScript\ActorModel\Messages\RunScriptMessage.cs" />
     <Compile Include="Module\Commands\RunScript\IRunScriptCommandProviderFactory.cs" />
     <Compile Include="Module\Commands\RunScript\OnlineStatus.cs" />
+    <Compile Include="Module\Common\DirectoryInfoExensions.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\CheckIfDoneMessage.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\ProcessedFolderMessage.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Actors\ProcessFolderActor.cs" />

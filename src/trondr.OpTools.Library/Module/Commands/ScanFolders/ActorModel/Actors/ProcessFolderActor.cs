@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
-using System.Security.AccessControl;
 using Akka.Actor;
 using Akka.Event;
 using Akka.Util.Internal;
 using trondr.OpTools.Library.Infrastructure;
 using trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Messages;
+using trondr.OpTools.Library.Module.Common;
 using Path = Pri.LongPath.Path;
 using Directory = Pri.LongPath.Directory;
 using DirectoryInfo = Pri.LongPath.DirectoryInfo;
@@ -48,7 +48,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
                 var files = directory.GetFiles();
                 var size = files.Sum(file => file.Length);
                 //ToDo.Implement(ToDoPriority.Critical, "trondr", "Implement get of sddl");
-                var sddl = directory.GetAccessControl(AccessControlSections.Access).GetSecurityDescriptorSddlForm(AccessControlSections.Access);
+                var sddl = directory.GetAccessControlSddlForm(true);
                 var comment = ""; //Any error message here, otherwise empty
                 message.ScanFoldersActors.UsageWriterActor.Tell(new UsageRecordMessage(message.HostName,
                     size.ToString(), directory.FullName, sddl, comment));
