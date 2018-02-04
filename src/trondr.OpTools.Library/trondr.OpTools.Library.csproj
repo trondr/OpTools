@@ -148,12 +148,10 @@
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\ProcessedFolderMessage.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Actors\ProcessFolderActor.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\ScanFoldersActors.cs" />
-    <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\ProcessFolderActorsTerminatedMessage.cs" />
+    <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\ProcessingIsDoneMessage.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\ProcessFolderMessage.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\ActorStatus.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\ActorFailedMessage.cs" />
-    <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\ScanFolderActorTerminatedMessage.cs" />
-    <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\ScanFolderActorsTerminatedMessage.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\UsageRecordMessage.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Actors\UsageWriterActor.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\UsageWriterActorTerminatedMessage.cs" />

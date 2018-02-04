@@ -1,6 +1,6 @@
 ﻿namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Messages
 {
-    public class ScanFolderActorTerminatedMessage
+    public class ProcessingIsDoneMessage
     {
     }
 }

@@ -62,25 +62,25 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
                 if (_pending <= 0 && _checkIfDone)
                 {
                     Logger.Info($"Done! {_pending} pending folders of total {_total}. Request termination.");
-                    Self.Tell(new ProcessFolderActorsTerminatedMessage());
+                    Self.Tell(new ProcessingIsDoneMessage());
                 }
             });
-            Receive<StopScanFoldersCoordinatorActorMessage>(message => 
-            {
-                Logger.Info($"Stopping {GetType().Name}...");
-                Context.Self.Tell(PoisonPill.Instance);
-            });
-            Receive<ProcessFolderActorsTerminatedMessage>(message =>
+            Receive<ProcessingIsDoneMessage>(message =>
             {
                 Logger.Info($"All {typeof(ProcessFolderMessage).Name}'s has terminated. Close and upload data and then request terminatation of the {typeof(UsageWriterActor).Name}.");
                 _usageWriterActor.Tell(new UsageWriterActorCloseMessage());
                 _usageWriterActor.Tell(new UsageWriterActorUploadMessage());
-                _usageWriterActor.Tell(PoisonPill.Instance);                
+                _usageWriterActor.Tell(PoisonPill.Instance);
             });
             Receive<UsageWriterActorTerminatedMessage>(message =>
             {
                 Logger.Info($"{typeof(UsageWriterActor).Name} has terminated. Request stop of {typeof(ScanFoldersCoordinatorActor).Name}");
                 Context.Self.Tell(new StopScanFoldersCoordinatorActorMessage());
+            });
+            Receive<StopScanFoldersCoordinatorActorMessage>(message => 
+            {
+                Logger.Info($"Stopping {GetType().Name}...");
+                Context.Self.Tell(PoisonPill.Instance);
             });
             Receive<ActorFailedMessage>(message =>
             {
@@ -106,8 +106,8 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
         private IActorRef CreateProcessFolderActorRouter(int degreeOfParallelism)
         {
             var processFolderActorRouter = Context.ActorOf(Context.DI().Props<ProcessFolderActor>().WithRouter(new SmallestMailboxPool(degreeOfParallelism)));
-            Logger.Info($"Watch {typeof(SmallestMailboxPool).Name} of {typeof(ProcessFolderActor).Name}'s for termination.");
-            Context.WatchWith(processFolderActorRouter, new ProcessFolderActorsTerminatedMessage());
+            //Logger.Info($"Watch {typeof(SmallestMailboxPool).Name} of {typeof(ProcessFolderActor).Name}'s for termination.");
+            //Context.WatchWith(processFolderActorRouter, new ProcessingIsDoneMessage());
             return processFolderActorRouter;
         }
 
