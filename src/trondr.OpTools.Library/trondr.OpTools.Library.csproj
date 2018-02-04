@@ -160,7 +160,6 @@
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\UsageWriterActorCloseMessage.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\UsageWriterActorOpenMessage.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\StopScanFoldersCoordinatorActorMessage.cs" />
-    <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\ScanFolderMessage.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\UsageWriterActorUploadMessage.cs" />
     <Compile Include="Module\Commands\ScanFolders\IScanFoldersCommandProviderFactory.cs" />
     <Compile Include="Module\Commands\ScanFolders\IScanFoldersCommandProvider.cs" />
