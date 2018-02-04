@@ -7,12 +7,12 @@ using trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors;
 namespace trondr.OpTools.Module.Infrastructure.ContainerConfiguration
 {
     [InstallerPriority(InstallerPriorityAttribute.DefaultPriority)]
-    public class ScanFolderActorContainerInstaller : IWindsorInstaller
+    public class ProcessFolderActorContainerInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             //Manual registrations
-            container.Register(Component.For<ScanFolderActor>().LifestyleTransient().Activator<StrictComponentActivator>());
+            container.Register(Component.For<ProcessFolderActor>().LifestyleTransient().Activator<StrictComponentActivator>());
         }
     }
 }

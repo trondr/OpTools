@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Akka;
-using Akka.Actor;
+﻿using Akka.Actor;
 using Akka.DI.Core;
 using Common.Logging;
 using trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors;
@@ -17,8 +15,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders
             _logger = logger;
         }
 
-        public int ScanFolders(string[] uncPathsToScan, string localDataFolder, string uploadDataFolder,
-            ActorSystem scanFoldersActorSystem, bool overWrite)
+        public int ScanFolders(string[] uncPathsToScan, string localDataFolder, string uploadDataFolder, bool overWrite, int degreeOfParallelism, ActorSystem scanFoldersActorSystem)
         {
             var exitCode = 0;
 
@@ -26,7 +23,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders
             var scanFoldersCoordinatorActor = scanFoldersActorSystem.ActorOf(scanFoldersActorSystem.DI().Props<ScanFoldersCoordinatorActor>(), "ScanFoldersCoordinatorActor");
             
             _logger.Info("Parsing input parameters...");
-            var scanFoldersMessageResult = ScanFoldersMessage.Create(uncPathsToScan, localDataFolder, uploadDataFolder, overWrite);
+            var scanFoldersMessageResult = ScanFoldersMessage.Create(uncPathsToScan, localDataFolder, uploadDataFolder, overWrite, degreeOfParallelism);
 
             scanFoldersMessageResult.IfSucc(scanFoldersMessage =>
             {

@@ -2,7 +2,7 @@
 using System.Linq;
 using Akka.Actor;
 
-namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
+namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel
 {
     public class ActorStatuses
     {

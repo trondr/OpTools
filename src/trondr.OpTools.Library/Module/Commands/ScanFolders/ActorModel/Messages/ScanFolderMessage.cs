@@ -11,13 +11,16 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Messages
         public string UncPath { get; }
         public string HostName { get; }
         public IActorRef UsageWriterActor { get; }
+        public IActorRef ProcessFolderActorRouter { get; }
         public string Name { get; }
 
-        private ScanFolderMessage(string uncPath, string hostName, IActorRef usageWriterActor)
+        private ScanFolderMessage(string uncPath, string hostName, IActorRef usageWriterActor,
+            IActorRef processFolderActorRouter)
         {
             this.UncPath = uncPath;
             this.HostName = hostName;
             UsageWriterActor = usageWriterActor;
+            ProcessFolderActorRouter = processFolderActorRouter;
             this.Name = GetNameFromUncPath(uncPath);
         }
 
@@ -29,7 +32,8 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Messages
                 .Replace(' ', '_');
         }
 
-        public static Result<ScanFolderMessage> Create(string uncPath, IActorRef usageWriterActor)
+        public static Result<ScanFolderMessage> Create(string uncPath, IActorRef usageWriterActor,
+            IActorRef processFolderActorRouter)
         {
             if (!Directory.Exists(uncPath))
                 return new Result<ScanFolderMessage>(new DirectoryNotFoundException($"Unc path '{uncPath}' not found."));
@@ -43,7 +47,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Messages
                 return new Result<ScanFolderMessage>(new ArgumentNullException($"{typeof(UsageWriterActor).Name} actor ref is null."));
             }
 
-            return new Result<ScanFolderMessage>(new ScanFolderMessage(uncPathUri.OriginalString,uncPathUri.Host, usageWriterActor));
+            return new Result<ScanFolderMessage>(new ScanFolderMessage(uncPathUri.OriginalString,uncPathUri.Host, usageWriterActor, processFolderActorRouter));
         }
     }
 }

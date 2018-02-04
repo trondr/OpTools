@@ -1,14 +1,23 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Akka.Actor;
+using Akka.Event;
 using Akka.Util.Internal;
 using trondr.OpTools.Library.Infrastructure;
 using trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Messages;
+using Path = Pri.LongPath.Path;
+using Directory = Pri.LongPath.Directory;
 using DirectoryInfo = Pri.LongPath.DirectoryInfo;
+using File = Pri.LongPath.File;
+using FileSystemInfo = Pri.LongPath.FileSystemInfo;
 
 namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
 {
     public class ProcessFolderActor : ReceiveActor
     {
+        private ILoggingAdapter _logger;
+        private ILoggingAdapter Logger => _logger ?? (_logger = Context.GetLogger());
+
         public ProcessFolderActor()
         {
             Receive<ProcessFolderMessage>(message => OnProcessFolderMessage(message));
@@ -16,17 +25,46 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
 
         private void OnProcessFolderMessage(ProcessFolderMessage message)
         {
-            var directory = new DirectoryInfo(message.UncPath);
+            try
+            {
+                var directory = new DirectoryInfo(message.UncPath);
+                var subDirectories = directory.GetDirectories();
+                subDirectories.ForEach(subDirectory =>
+                {
+                    var processFolderMessage =
+                        ProcessFolderMessage.Create(subDirectory.FullName, message.ScanFoldersActors);
+                    processFolderMessage.IfSucc(folderMessage =>
+                    {
+                        message.ScanFoldersActors.CoordinatorActor.Tell(folderMessage);
+                    });
+                    processFolderMessage.IfFail(exception =>
+                    {
+                        Logger.Error(
+                            $"Failed to create {typeof(ProcessFolderMessage).Name} from path '{message.UncPath}' in {this.GetType().Namespace}.  {exception.Message}");
+                    });
+                });
 
-            var subDirectories = directory.GetDirectories();
-            subDirectories.ForEach(info => Context.Parent.Tell(new ProcessFolderMessage(message.HostName,info.FullName,message.UsageWriterActor)));
+                var files = directory.GetFiles();
+                var size = files.Sum(file => file.Length);
+                //ToDo.Implement(ToDoPriority.Critical, "trondr", "Implement get of sddl");
+                var sddl = "";
+                var comment = ""; //Any error message here, otherwise empty
+                message.ScanFoldersActors.UsageWriterActor.Tell(new UsageRecordMessage(message.HostName,
+                    size.ToString(), directory.FullName, sddl, comment));
+                message.ScanFoldersActors.CoordinatorActor.Tell(new ProcessedFolderMessage());
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                message.ScanFoldersActors.UsageWriterActor.Tell(new UsageRecordMessage(message.HostName, 0.ToString(),
+                    message.UncPath, "", ex.Message));
+                message.ScanFoldersActors.CoordinatorActor.Tell(new ProcessedFolderMessage());
+            }            
+        }
 
-            var files = directory.GetFiles();
-            var size = files.Sum(file => file.Length);
-            ToDo.Implement(ToDoPriority.Critical,"trondr","Implement get of sddl");
-            var sddl = "";
-            var comment = ""; //Any error message here, otherwise empty
-            message.UsageWriterActor.Tell(new UsageRecordMessage(message.HostName, size.ToString(), directory.FullName, sddl,comment));
+        protected override void PostStop()
+        {
+            Logger.Info($"{GetType().Name}({Self.Path}) has stopped.");
+            base.PostStop();
         }
     }
 }

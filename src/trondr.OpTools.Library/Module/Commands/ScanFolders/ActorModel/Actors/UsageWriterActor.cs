@@ -112,6 +112,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
         protected override void PostStop()
         {
             CloseFile(ref _sw);
+            Logger.Info($"{GetType().Name}({Self.Path}) has stopped.");
             base.PostStop();
         }
 

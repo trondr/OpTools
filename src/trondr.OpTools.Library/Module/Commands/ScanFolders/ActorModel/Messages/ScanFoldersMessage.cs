@@ -12,18 +12,20 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Messages
         public string UploadDataFolder { get; }
         public int ExitCode { get; set; }
         public bool OverWrite { get; }
+        public int DegreeOfParallelism { get; }
 
-        private ScanFoldersMessage(string[] uncPathsToScan, string localDataFolder, string uploadDataFolder, bool overWrite)
+        private ScanFoldersMessage(string[] uncPathsToScan, string localDataFolder, string uploadDataFolder, bool overWrite, int degreeOfParallelism)
         {
             UncPathsToScan = uncPathsToScan;
             LocalDataFolder = localDataFolder;
             UploadDataFolder = uploadDataFolder;
             OverWrite = overWrite;
+            DegreeOfParallelism = degreeOfParallelism;
             ExitCode = 0;
         }
 
         public static Result<ScanFoldersMessage> Create(string[] uncPathsToScan, string localDataFolder,
-            string uploadDataFolder, bool overWrite)
+            string uploadDataFolder, bool overWrite, int degreeOfParallelism)
         {
             if (!Directory.Exists(localDataFolder))
                 return new Result<ScanFoldersMessage>(new DirectoryNotFoundException($"Local data folder '{localDataFolder}' not found."));
@@ -39,7 +41,12 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Messages
             {
                 return new Result<ScanFoldersMessage>(new DirectoryNotFoundException($"UncPathsToScan not existing: {string.Join(", ",uncPathsToScanNotExisting)}"));
             }
-            return new Result<ScanFoldersMessage>(new ScanFoldersMessage(uncPathsToScan, localDataFolder, uploadDataFolder, overWrite));
+
+            if (degreeOfParallelism <= 0 || degreeOfParallelism > 255)
+            {
+                return new Result<ScanFoldersMessage>(new ArgumentException("Parameter degreeOfParallelism must be between 1 and 255."));
+            }            
+            return new Result<ScanFoldersMessage>(new ScanFoldersMessage(uncPathsToScan, localDataFolder, uploadDataFolder, overWrite, degreeOfParallelism));
         }
     }
 }
