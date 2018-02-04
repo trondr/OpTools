@@ -75,9 +75,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
                 Logger.Info($"All {typeof(ProcessFolderMessage).Name}'s has terminated. Close and upload data and then request terminatation of the {typeof(UsageWriterActor).Name}.");
                 _usageWriterActor.Tell(new UsageWriterActorCloseMessage());
                 _usageWriterActor.Tell(new UsageWriterActorUploadMessage());
-                _usageWriterActor.Tell(PoisonPill.Instance);
-                Logger.Info($"{typeof(ProcessFolderActor).Name}'s have terminated. Request stop of {typeof(ScanFoldersCoordinatorActor).Name}");
-                Context.Self.Tell(new StopScanFoldersCoordinatorActorMessage());
+                _usageWriterActor.Tell(PoisonPill.Instance);                
             });
             Receive<UsageWriterActorTerminatedMessage>(message =>
             {
