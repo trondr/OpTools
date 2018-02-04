@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.AccessControl;
 using Akka.Actor;
 using Akka.Event;
 using Akka.Util.Internal;
@@ -48,16 +49,18 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
                 var files = directory.GetFiles();
                 var size = files.Sum(file => file.Length);
                 //ToDo.Implement(ToDoPriority.Critical, "trondr", "Implement get of sddl");
-                var sddl = directory.GetAccessControlSddlForm(true);
+                var directorySecurity = directory.GetAccessControl(AccessControlSections.Access);
+                var sddl = directorySecurity.GetAccessControlSddlForm(AccessControlSections.Access, true);
+                var isProtected = directorySecurity.AreAccessRulesProtected;
                 var comment = ""; //Any error message here, otherwise empty
                 message.ScanFoldersActors.UsageWriterActor.Tell(new UsageRecordMessage(message.HostName,
-                    size.ToString(), directory.FullName, sddl, comment));
+                    size.ToString(), directory.FullName, sddl,isProtected.ToString(), comment));
                 message.ScanFoldersActors.CoordinatorActor.Tell(new ProcessedFolderMessage());
             }
             catch (UnauthorizedAccessException ex)
             {
                 message.ScanFoldersActors.UsageWriterActor.Tell(new UsageRecordMessage(message.HostName, 0.ToString(),
-                    message.UncPath, "", ex.Message));
+                    message.UncPath, "", "", ex.Message));
                 message.ScanFoldersActors.CoordinatorActor.Tell(new ProcessedFolderMessage());
             }            
         }

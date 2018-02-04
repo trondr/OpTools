@@ -43,7 +43,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
             Receive<UsageWriterActorCloseMessage>(message => { OnClose(); });
             Receive<UsageRecordMessage>(message =>
             {
-                _sw.WriteLine(GetCsvLine(message.Hostname, message.Size, message.Path, message.Sddl, message.Comment));                
+                _sw.WriteLine(GetCsvLine(message.Hostname, message.Size, message.Path, message.Sddl,message.IsProtected ,message.Comment));                
             });
             Receive<UsageWriterActorUploadMessage>(message =>
             {
@@ -118,20 +118,20 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
 
         private string GetCsvHeader()
         {
-            return GetCsvLine("Hostname","Size","Path","Sddl","Comment");
+            return GetCsvLine("Hostname","Size","Path","Sddl","IsProtected","Comment");
         }
 
-        private string GetCsvLine(string hostName, string size, string path, string sddl, string comment)
+        private string GetCsvLine(string hostName, string size, string path, string sddl, string isProtected,
+            string comment)
         {
-            return $"{Q(hostName)};{Q(size)};{Q(path)};{Q(sddl)};{Q(comment)}";
+            return $"{Q(hostName)};{Q(size)};{Q(path)};{Q(sddl)};{Q(isProtected)};{Q(comment)}";
         }
 
         private string Q(string value)
         {
             return $"\"{value}\"";
         }
-
-
+        
         private void OnFailed(string message, int exitCode)
         {
             Logger.Error(message);
