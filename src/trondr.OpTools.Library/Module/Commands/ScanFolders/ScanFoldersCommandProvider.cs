@@ -18,7 +18,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders
         }
 
         public int ScanFolders(string[] uncPathsToScan, string localDataFolder, string uploadDataFolder,
-            ActorSystem scanFoldersActorSystem)
+            ActorSystem scanFoldersActorSystem, bool overWrite)
         {
             var exitCode = 0;
 
@@ -26,7 +26,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders
             var scanFoldersCoordinatorActor = scanFoldersActorSystem.ActorOf(scanFoldersActorSystem.DI().Props<ScanFoldersCoordinatorActor>(), "ScanFoldersCoordinatorActor");
             
             _logger.Info("Parsing input parameters...");
-            var scanFoldersMessageResult = ScanFoldersMessage.Create(uncPathsToScan, localDataFolder, uploadDataFolder);
+            var scanFoldersMessageResult = ScanFoldersMessage.Create(uncPathsToScan, localDataFolder, uploadDataFolder, overWrite);
 
             scanFoldersMessageResult.IfSucc(scanFoldersMessage =>
             {

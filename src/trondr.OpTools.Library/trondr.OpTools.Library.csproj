@@ -143,7 +143,7 @@
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Actors\ActorStatuses.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Actors\ScanFolderActor.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Actors\ActorStatus.cs" />
-    <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\UsageActorFailedMessage.cs" />
+    <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\ActorFailedMessage.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\ScanFolderActorTerminatedMessage.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\ScanFolderActorsTerminatedMessage.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\UsageRecordMessage.cs" />

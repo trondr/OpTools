@@ -13,6 +13,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
         private string _localDataFile;        
         private StreamWriter _sw;
         private string _uploadDataFile;
+        private bool _overWrite;
 
 
         public UsageWriterActor()
@@ -66,12 +67,12 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
         private void OnUpload(UsageWriterActorUploadMessage message)
         {
             Logger.Info($"Uploading '{_localDataFile}' -> '{_uploadDataFile}'...");
-            if (File.Exists(_uploadDataFile))
+            if (File.Exists(_uploadDataFile) && !_overWrite)
             {
                 OnFailed($"Upload data file '{_uploadDataFile}' allready exists. Closing writer.", 0x000000B7);
                 return;
             }
-            File.Copy(_localDataFile,_uploadDataFile);
+            File.Copy(_localDataFile,_uploadDataFile, _overWrite);
             Logger.Info($"Finished uploading '{_localDataFile}' -> '{_uploadDataFile}'!");
         }
 
@@ -79,8 +80,9 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
         {
             _localDataFile = message.LocalDataFile;
             _uploadDataFile = message.UploadDataFile;
+            _overWrite = message.OverWrite;
             Logger.Info($"Checking if data file '{_localDataFile}' allready exists.");
-            if (File.Exists(_localDataFile))
+            if (File.Exists(_localDataFile) && !_overWrite)
             {
                 OnFailed($"Cannot open for writing of usage records. Local data file '{_localDataFile}' allready exists. Closing writer.", 0x000000B7);
                 return;
@@ -94,19 +96,22 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
 
         private void OnClose()
         {
-            _sw?.Close();
-            _sw?.Dispose();
+            CloseFile(ref _sw);
             Become(LocalDataFileClosed);            
+        }
+
+        private void CloseFile(ref StreamWriter sw)
+        {
+            if (sw == null) return;
+            Logger.Info($"Closing local data file '{_localDataFile}'");
+            sw.Close();
+            sw.Dispose();
+            sw = null;            
         }
 
         protected override void PostStop()
         {
-            if (_sw != null)
-            {
-                Logger.Info($"Closing local data file '{_localDataFile}'");
-                _sw?.Close();
-                _sw?.Dispose();
-            }
+            CloseFile(ref _sw);
             base.PostStop();
         }
 

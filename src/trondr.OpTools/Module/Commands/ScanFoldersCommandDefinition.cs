@@ -34,7 +34,9 @@ namespace trondr.OpTools.Module.Commands
             [RequiredCommandParameter(Description = "The result will be uploaded to this folder when scan is done.", AlternativeName = "uf", ExampleValue = @"\\dataserver1\data\folderreports")]
             string uploadDataFolder,
             [OptionalCommandParameter(Description = "Run folder scan with SeBackupPrivilege to ignore any access control entries on folders and files blocking the way.", DefaultValue = false,ExampleValue = false,AlternativeName = "rbp")]
-            bool runWithBackupPrivilege
+            bool runWithBackupPrivilege,
+            [OptionalCommandParameter(Description = "Overwrite any existing local data file and upload data file.", DefaultValue = false,ExampleValue = false,AlternativeName = "ow")]
+            bool overWrite
             )
         {
             int exitCode;
@@ -49,25 +51,25 @@ namespace trondr.OpTools.Module.Commands
                     }
                     else
                     {
-                        exitCode = RunScanFolders(uncPathsToScan, localDataFolder, uploadDataFolder);
+                        exitCode = RunScanFolders(uncPathsToScan, localDataFolder, uploadDataFolder, overWrite);
                     }                    
                 }
             }
             else
             {
-                exitCode = RunScanFolders(uncPathsToScan, localDataFolder, uploadDataFolder);
+                exitCode = RunScanFolders(uncPathsToScan, localDataFolder, uploadDataFolder, overWrite);
             }
             return exitCode;
         }
 
-        private int RunScanFolders(string[] uncPathsToScan, string localDataFolder, string uploadDataFolder)
+        private int RunScanFolders(string[] uncPathsToScan, string localDataFolder, string uploadDataFolder, bool overWrite)
         {
             using (var scanFoldersActorSystem = ActorSystem.Create("ScanFoldersActorSystem"))
             {
                 var windsorDependencyResolver = new WindsorDependencyResolver(_windsorContainer, scanFoldersActorSystem);
                 scanFoldersActorSystem.AddDependencyResolver(windsorDependencyResolver);
                 var scanFoldersCommandProvider = _scanFoldersCommandProviderFactory.GetScanFoldersCommandProvider();
-                var exitCode = scanFoldersCommandProvider.ScanFolders(uncPathsToScan, localDataFolder, uploadDataFolder, scanFoldersActorSystem);
+                var exitCode = scanFoldersCommandProvider.ScanFolders(uncPathsToScan, localDataFolder, uploadDataFolder, scanFoldersActorSystem, overWrite);
                 return exitCode;
             }
         }
