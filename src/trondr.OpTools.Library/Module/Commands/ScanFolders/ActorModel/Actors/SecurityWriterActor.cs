@@ -7,7 +7,6 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
 {
     public class SecurityWriterActor : ReceiveActor
     {
-
         private ILoggingAdapter _logger;
         private ILoggingAdapter Logger => _logger ?? (_logger = Context.GetLogger());
         private SecurityFileWriter _securityFileWriter;

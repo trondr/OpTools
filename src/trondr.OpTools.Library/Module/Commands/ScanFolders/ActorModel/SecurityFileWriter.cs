@@ -13,12 +13,12 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel
         {
             FileName = fileName;
             _sw = new StreamWriter(FileName);
-            _sw.WriteLine(GetCsvHeader());
+            _sw.WriteLine(SecurityFileUtil.GetCsvHeader());
         }
 
         public void WriteSecurityRecord(SecurityRecordMessage securityRecordMessage)
         {
-            _sw.WriteLine(GetCsvLine(securityRecordMessage.Hostname, securityRecordMessage.Path, securityRecordMessage.Accesscontroltype, securityRecordMessage.Identity, securityRecordMessage.Accessmask, securityRecordMessage.IsInherited, securityRecordMessage.Inheritanceflags, securityRecordMessage.Propagationflags));
+            _sw.WriteLine(SecurityFileUtil.GetCsvLine(securityRecordMessage.Hostname, securityRecordMessage.Path, securityRecordMessage.Accesscontroltype, securityRecordMessage.Identity, securityRecordMessage.Accessmask, securityRecordMessage.IsInherited, securityRecordMessage.Inheritanceflags, securityRecordMessage.Propagationflags));
         }
 
         private void ReleaseUnmanagedResources()
@@ -36,21 +36,6 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel
         ~SecurityFileWriter()
         {
             ReleaseUnmanagedResources();
-        }
-
-        private string GetCsvHeader()
-        {
-            return GetCsvLine("Hostname", "Path", "AccessControlType", "Identity", "AccessMask", "IsInherited","InheritanceFlags","PropagationFlags");
-        }
-
-        private string GetCsvLine(string hostname, string path, string accesscontroltype, string identity, string accessmask, string isinherited, string inheritanceflags, string propagationflags)
-        {
-            return $"{Q(hostname)};{Q(path)};{Q(path)};{Q(accesscontroltype)};{Q(identity)};{Q(accessmask)};{Q(isinherited)};{Q(inheritanceflags)};{Q(propagationflags)}";
-        }
-
-        private string Q(string value)
-        {
-            return $"\"{value}\"";
         }
     }
 }

@@ -145,6 +145,10 @@
     <Compile Include="Module\Commands\RunScript\OnlineStatus.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\OnCloseSecurityWriterActorMessage.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\OnUploadSecurityWriterActorMessage.cs" />
+    <Compile Include="Module\Commands\ScanFolders\ActorModel\SecurityFileReader.cs" />
+    <Compile Include="Module\Commands\ScanFolders\ActorModel\SecurityFileUtil.cs" />
+    <Compile Include="Module\Commands\ScanFolders\ActorModel\UsageFileReader.cs" />
+    <Compile Include="Module\Commands\ScanFolders\ActorModel\UsageFileUtil.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\UsageFileWriter.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\SecurityFileWriter.cs" />
     <Compile Include="Module\Commands\ScanFolders\ActorModel\Messages\SecurityRecordMessage.cs" />

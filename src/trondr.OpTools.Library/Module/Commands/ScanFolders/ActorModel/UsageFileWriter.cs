@@ -14,12 +14,12 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel
             FileName = fileName;
             _sw = new StreamWriter(FileName);
             _sw.AutoFlush = true;
-            _sw.WriteLine(GetCsvHeader());
+            _sw.WriteLine(UsageFileUtil.GetCsvHeader());
         }
 
         public void WriteRecord(UsageRecordMessage securityRecordMessage)
         {
-            _sw.WriteLine(GetCsvLine(securityRecordMessage.Hostname, securityRecordMessage.Size, securityRecordMessage.Path, securityRecordMessage.Sddl, securityRecordMessage.IsProtected, securityRecordMessage.Comment));
+            _sw.WriteLine(UsageFileUtil.GetCsvLine(securityRecordMessage.Hostname, securityRecordMessage.Size, securityRecordMessage.Path, securityRecordMessage.Sddl, securityRecordMessage.IsProtected, securityRecordMessage.Comment));
         }
 
         private void ReleaseUnmanagedResources()
@@ -37,22 +37,6 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel
         ~UsageFileWriter()
         {
             ReleaseUnmanagedResources();
-        }
-
-        private string GetCsvHeader()
-        {
-            return GetCsvLine("Hostname", "Size", "Path", "Sddl", "IsProtected", "Comment");
-        }
-
-        private string GetCsvLine(string hostName, string size, string path, string sddl, string isProtected,
-            string comment)
-        {
-            return $"{Q(hostName)};{Q(size)};{Q(path)};{Q(sddl)};{Q(isProtected)};{Q(comment)}";
-        }
-
-        private string Q(string value)
-        {
-            return $"\"{value}\"";
-        }
+        }        
     }
 }

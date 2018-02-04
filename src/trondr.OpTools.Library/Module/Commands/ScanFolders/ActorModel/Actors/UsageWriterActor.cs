@@ -19,62 +19,32 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
 
         public UsageWriterActor()
         {            
-            Become(ReadyForOpeningOfLocalDataFile);
+            Become(Initializing);
         }
 
-        private void ReadyForOpeningOfLocalDataFile()
+        private void Initializing()
         {
             Receive<UsageWriterActorOpenMessage>(message => OnOpen(message));
-            Receive<UsageWriterActorCloseMessage>(message =>
-            {
-                Logger.Error($"Cannot close {typeof(UsageWriterActor).Name} as it has not been previously been opened.");
-            });            
-            Receive<UsageRecordMessage>(message =>
-            {
-                Logger.Error($"Local data file has not been created. Dropping usage record: {message.Path}");
+            Receive<UsageWriterActorCloseMessage>(message => { Logger.Error($"Cannot close {typeof(UsageWriterActor).Name} as it has not been previously been opened."); });            
+            Receive<UsageRecordMessage>(message => { Logger.Error($"Local data file has not been created. Dropping usage record: {message.Path}"); });
+            Receive<UsageWriterActorUploadMessage>(message => { Logger.Error($"Unable to upload local data file '{_localDataFile}'. {GetType().Name} is in the Initializing phase.");
             });
         }
 
-        private void LocalDataFileOpened()
+        private void Opened()
         {
-            Receive<UsageWriterActorOpenMessage>(message =>
-            {
-                Logger.Error($"Local data file {_localDataFile} is allready open");
-            });
+            Receive<UsageWriterActorOpenMessage>(message => { Logger.Error($"Local data file {_localDataFile} is allready open"); });
             Receive<UsageWriterActorCloseMessage>(message => { OnClose(); });
-            Receive<UsageRecordMessage>(message =>
-            {
-                _usageFileWriter.WriteRecord(message);                
-            });
-            Receive<UsageWriterActorUploadMessage>(message =>
-            {
-                Logger.Error($"Unable to upload local data file '{_localDataFile}' as it is still open.");
-            });
+            Receive<UsageRecordMessage>(message => { _usageFileWriter.WriteRecord(message); });
+            Receive<UsageWriterActorUploadMessage>(message => { Logger.Error($"Unable to upload local data file '{_localDataFile}' as it is still open."); });
         }
 
-        private void LocalDataFileClosed()
+        private void Closed()
         {            
-            Receive<UsageWriterActorOpenMessage>(message =>
-            {
-                Logger.Error($"Cannot open for writing of usage records. Local data file '{message.LocalDataFile}' allready exists.");
-            });
-            Receive<UsageRecordMessage>(message =>
-            {
-                Logger.Error($"Local data file is closed. Dropping usage record: {message.Path}");
-            });
-            Receive<UsageWriterActorUploadMessage>(message => OnUpload(message));
-        }
-
-        private void OnUpload(UsageWriterActorUploadMessage message)
-        {
-            Logger.Info($"Uploading '{_localDataFile}' -> '{_uploadDataFile}'...");
-            if (File.Exists(_uploadDataFile) && !_overWrite)
-            {
-                OnFailed($"Upload data file '{_uploadDataFile}' allready exists. Closing writer.", 0x000000B7);
-                return;
-            }
-            File.Copy(_localDataFile,_uploadDataFile, _overWrite);
-            Logger.Info($"Finished uploading '{_localDataFile}' -> '{_uploadDataFile}'!");
+            Receive<UsageWriterActorOpenMessage>(message => { Logger.Error($"Cannot open for writing of usage records. Local data file '{message.LocalDataFile}' is closed."); });
+            Receive<UsageWriterActorCloseMessage>(message => { Logger.Error($"Cannot close {typeof(UsageWriterActor).Name} as it is allread closed."); });
+            Receive<UsageRecordMessage>(message => { Logger.Error($"Local data file is closed. Dropping usage record: {message.Path}");});
+            Receive<UsageWriterActorUploadMessage>(message => OnUpload());
         }
 
         private void OnOpen(UsageWriterActorOpenMessage message)
@@ -90,13 +60,25 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
             }
             Logger.Info($"Opening output data file '{_localDataFile}'");
             _usageFileWriter = new UsageFileWriter(_localDataFile);            
-            Become(LocalDataFileOpened);
+            Become(Opened);
         }
 
         private void OnClose()
         {
             CloseFile(ref _usageFileWriter);
-            Become(LocalDataFileClosed);            
+            Become(Closed);            
+        }
+
+        private void OnUpload()
+        {
+            Logger.Info($"Uploading '{_localDataFile}' -> '{_uploadDataFile}'...");
+            if (File.Exists(_uploadDataFile) && !_overWrite)
+            {
+                OnFailed($"Upload data file '{_uploadDataFile}' allready exists. Closing writer.", 0x000000B7);
+                return;
+            }
+            File.Copy(_localDataFile, _uploadDataFile, _overWrite);
+            Logger.Info($"Finished uploading '{_localDataFile}' -> '{_uploadDataFile}'!");
         }
 
         private void CloseFile(ref UsageFileWriter usageFileWriter)
