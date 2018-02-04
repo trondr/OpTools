@@ -31,7 +31,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders
                 scanFoldersCoordinatorActor.Tell(scanFoldersMessage);
                 _logger.Info("Waiting for scan folders actor system to terminate...");
                 scanFoldersActorSystem.WhenTerminated.Wait();
-                _logger.Info("Actor system has terminated!");
+                _logger.Info($"{scanFoldersActorSystem.Name} has terminated!");
                 exitCode = scanFoldersMessage.ExitCode;
             });
 
@@ -41,7 +41,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders
                 scanFoldersActorSystem.Terminate();
                 _logger.Info("Waiting for scan folders actor system to terminate...");
                 scanFoldersActorSystem.WhenTerminated.Wait();
-                _logger.Info("Actor system has terminated!");
+                _logger.Info($"{scanFoldersActorSystem.Name} has terminated!");
                 exitCode = 1;
             });
             return exitCode;

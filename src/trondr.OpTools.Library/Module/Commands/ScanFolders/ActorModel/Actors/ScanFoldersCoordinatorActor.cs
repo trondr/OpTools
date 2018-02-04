@@ -141,10 +141,15 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
         protected override void PostStop()
         {
             Logger.Info($"{GetType().Name}({Self.Path}) has stopped.");
+            
             var system = Context.System;
-
-            Logger.Info($"Stopping actor system in 5 seconds...");
-            Task.Delay(5000).ContinueWith(task => system.Terminate());
+            const double inSeconds = 5;
+            Logger.Info($"Terminating {system.Name} in {inSeconds} seconds...");
+            system.Scheduler.Advanced.ScheduleOnce(TimeSpan.FromSeconds(inSeconds),() =>
+            {
+                Logger.Info($"Terminating {system.Name}...");
+                system.Terminate();
+            });
             base.PostStop();
         }
     }
