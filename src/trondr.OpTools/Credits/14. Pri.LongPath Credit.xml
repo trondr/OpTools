@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CreditInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ProductName>Pri.LongPath</ProductName>
+  <ProductHome>https://github.com/peteraritchie/LongPath</ProductHome>
+  <CreditText>trondr.OpTools uses Pri.LongPath to provide long path support when accessing NTFS paths longer than 255 characters.</CreditText>
+</CreditInfo>

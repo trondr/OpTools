@@ -2,3 +2,5 @@
 RunScript /scriptPath="c:\temp\test.ps1" /hostNameListCsv="c:\temp\hostnames.csv" /resultFolderPath="c:\temp" /samplePercent="100" /resolveToIpv4Address="False" /scriptExecutionParallelism="10"
 
 RunScript /scriptPath="c:\temp\test.ps1" /hostNameListCsv="c:\temp\hostnames.csv" /resultFolderPath="c:\temp" /samplePercent="100" /resolveToIpv4Address="True" /scriptExecutionParallelism="10"
+
+ScanFolders /uncPathsToScan="['\\localhost\c$\temp';'\\localhost\c$\ProgramFiles']" /localDataFolder="c:\temp\data" /uploadDataFolder="\\dataserver1\data\folderreports"
