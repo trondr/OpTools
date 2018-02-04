@@ -105,10 +105,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
 
         private IActorRef CreateProcessFolderActorRouter(int degreeOfParallelism)
         {
-            var processFolderActorRouter = Context.ActorOf(Context.DI().Props<ProcessFolderActor>().WithRouter(new SmallestMailboxPool(degreeOfParallelism)));
-            //Logger.Info($"Watch {typeof(SmallestMailboxPool).Name} of {typeof(ProcessFolderActor).Name}'s for termination.");
-            //Context.WatchWith(processFolderActorRouter, new ProcessingIsDoneMessage());
-            return processFolderActorRouter;
+            return Context.ActorOf(Context.DI().Props<ProcessFolderActor>().WithRouter(new SmallestMailboxPool(degreeOfParallelism)));            
         }
 
         private int StartFolderScanning(string[] uncPathsToScan, ScanFoldersActors scanFoldersActors)
