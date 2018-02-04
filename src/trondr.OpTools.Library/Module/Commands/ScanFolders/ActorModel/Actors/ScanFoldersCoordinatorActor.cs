@@ -98,7 +98,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
             var uploadDataFile = Path.Combine(message.UploadDataFolder, "FolderUsage.csv");
             _usageWriterActor = CreateUsageWriterActor(localDataFile, uploadDataFile, message.OverWrite);
             _processFolderActorRouter = CreateProcessFolderActorRouter(message.DegreeOfParallelism);
-            var scanFoldersActors = new ScanFoldersActors(Self,_processFolderActorRouter,_usageWriterActor);
+            var scanFoldersActors = new ScanFoldersActors(Self, _usageWriterActor);
             var exitCode = StartFolderScanning(message.UncPathsToScan, scanFoldersActors);
             _scanFoldersMessage.ExitCode = exitCode;
         }
