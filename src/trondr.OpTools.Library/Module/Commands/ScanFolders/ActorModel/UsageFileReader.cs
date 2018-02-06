@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using CsvHelper;
+using CsvHelper.Configuration;
 using trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Messages;
 
 namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel
@@ -8,27 +10,35 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel
     public class UsageFileReader : IDisposable
     {
         public string FileName { get; }
-        private readonly StreamReader _sr;
 
         public UsageFileReader(string fileName)
         {
             FileName = fileName;
-            _sr = new StreamReader(FileName);
-            UsageFileUtil.ParseHeader(_sr.ReadLine());
         }
 
         public IEnumerable<UsageRecordMessage> GetAllRecords()
         {
-            while (_sr.Peek() >= 0)
+            using (var sr = new StreamReader(FileName))
             {
-                yield return UsageFileUtil.ParseRecord(_sr.ReadLine());
+                var config = new Configuration
+                {
+                    Delimiter = ";",
+                    HasHeaderRecord = true,
+                    PrepareHeaderForMatch = header => header.ToLower(),
+                };
+                using (var csvReader = new CsvReader(sr, config))
+                {
+                    foreach (var record in csvReader.GetRecords<UsageRecordMessage>())
+                    {
+                        yield return record;
+                    }
+                }
             }
         }
 
         private void ReleaseUnmanagedResources()
         {
-            _sr?.Close();
-            _sr?.Dispose();
+
         }
 
         public void Dispose()

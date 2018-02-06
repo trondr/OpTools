@@ -34,7 +34,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
         private void Closed()
         {
             Receive<SecurityWriterActorOpenMessage>(message => { Logger.Error($"{GetType().Name} has been closed and cannot be reopened."); });
-            Receive<SecurityRecordMessage>(message => { Logger.Error($"{GetType().Name} has been closed and cannot write more {typeof(SecurityRecordMessage).Namespace}'s."); });
+            Receive<SecurityRecordMessage>(message => { Logger.Error($"{GetType().Name} has been closed and cannot write more {typeof(SecurityAccessRuleRecordMessage).Namespace}'s."); });
             Receive<SecurityWriterActorCloseMessage>(message => { Logger.Error($"{GetType().Name} has allready been closed."); });
             Receive<SecurityWriterActorUploadMessage>(message => OnUpload());
         }

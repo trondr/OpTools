@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using CsvHelper;
+using CsvHelper.Configuration;
 using trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Messages;
 
 namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel
@@ -7,24 +10,39 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel
     public class SecurityFileWriter: IDisposable
     {
         public string FileName { get; }
-        private StreamWriter _sw;
+        private readonly StreamWriter _sw;
+        private readonly CsvWriter _csvWriter;
 
         public SecurityFileWriter(string fileName)
         {
             FileName = fileName;
             _sw = new StreamWriter(FileName);
-            _sw.WriteLine(SecurityFileUtil.GetCsvHeader());
+            var config = new Configuration
+            {
+                Delimiter = ";",
+                PrepareHeaderForMatch = header => header.ToLower()
+            };
+            _csvWriter = new CsvWriter(_sw, config);
+            _csvWriter.WriteHeader<SecurityRecordMessage>();
+            _csvWriter.NextRecord();
         }
 
         public void WriteSecurityRecord(SecurityRecordMessage securityRecordMessage)
         {
-            _sw.WriteLine(SecurityFileUtil.GetCsvLine(securityRecordMessage.Hostname, securityRecordMessage.Path, securityRecordMessage.Accesscontroltype, securityRecordMessage.Identity, securityRecordMessage.Accessmask, securityRecordMessage.IsInherited, securityRecordMessage.Inheritanceflags, securityRecordMessage.Propagationflags));
+            _csvWriter.WriteRecord(securityRecordMessage);
+            _csvWriter.NextRecord();
+        }
+
+        public void WriteRecords(IEnumerable<SecurityRecordMessage> securityRecordMessages)
+        {
+            _csvWriter.WriteRecords(securityRecordMessages);
         }
 
         private void ReleaseUnmanagedResources()
         {
+            _csvWriter?.Dispose();
             _sw?.Close();
-            _sw?.Dispose();
+            _sw?.Dispose();            
         }
 
         public void Dispose()

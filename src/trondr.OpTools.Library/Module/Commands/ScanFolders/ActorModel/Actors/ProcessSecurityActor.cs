@@ -52,7 +52,15 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
             var accessRuleRecordMessages = _getCachedAccessRuleRecords(usageRecord.Sddl);
             foreach (var securityAccessRuleRecordMessage in accessRuleRecordMessages)
             {
-                _message.Coordinator.Tell(securityAccessRuleRecordMessage);
+                if (securityAccessRuleRecordMessage.IsInherited == "False")
+                {
+                    var securityRecordMessage = new SecurityRecordMessage(usageRecord.Hostname, usageRecord.Path,
+                        securityAccessRuleRecordMessage.Accesscontroltype, securityAccessRuleRecordMessage.Identity,
+                        securityAccessRuleRecordMessage.Accessmask, securityAccessRuleRecordMessage.IsInherited,
+                        securityAccessRuleRecordMessage.Inheritanceflags,
+                        securityAccessRuleRecordMessage.Propagationflags);
+                    _message.Coordinator.Tell(securityRecordMessage);
+                }
             }
             _message.Coordinator.Tell(new UsageRecordProcessedMessage());
         }        

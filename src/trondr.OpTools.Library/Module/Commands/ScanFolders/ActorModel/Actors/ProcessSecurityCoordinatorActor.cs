@@ -31,7 +31,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
         private void Started()
         {
             Receive<ProcessSecurityCoordinatorActorOpenMessage>(message => Logger.Error($"{GetType().Name} has allready started."));
-            Receive<SecurityAccessRuleRecordMessage>(message => OnSave(message));
+            Receive<SecurityRecordMessage>(message => OnSave(message));
             Receive<UsageRecordProcessedMessage>(message =>
             {
                 _pending--;
@@ -89,6 +89,7 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
         {
             var actor = Context.ActorOf(Context.DI().Props<ProcessSecurityActor>());
             actor.Tell(new ProcessActorSecurityOpenMessage(Self));
+            Context.WatchWith(actor, new SecurityWriterActorTerminatedMessage());
             return actor;
         }
 
@@ -96,11 +97,11 @@ namespace trondr.OpTools.Library.Module.Commands.ScanFolders.ActorModel.Actors
         {
             var actor = Context.ActorOf(Context.DI().Props<SecurityWriterActor>());
             actor.Tell(new SecurityWriterActorOpenMessage(localDataFile, uploadDataFile, overWrite));
-            Context.WatchWith(Context.Self, new SecurityWriterActorTerminatedMessage());
+            Context.WatchWith(actor, new SecurityWriterActorTerminatedMessage());
             return actor;
         }
 
-        private void OnSave(SecurityAccessRuleRecordMessage message)
+        private void OnSave(SecurityRecordMessage message)
         {
             _securityWriterActor.Tell(message);
         }

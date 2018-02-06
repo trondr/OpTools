@@ -205,6 +205,7 @@
     <EmbeddedResource Include="Credits\12. Akka.NET Credit.xml" />
     <EmbeddedResource Include="Credits\13. Language-Ext Credit.xml" />
     <EmbeddedResource Include="Credits\14. Pri.LongPath Credit.xml" />
+    <EmbeddedResource Include="Credits\15. CsvHelper Credit.xml" />
     <Content Include="Debug.txt" />
     <EmbeddedResource Include="License\00. trondr.OpTools License.xml" />
     <EmbeddedResource Include="License\01. Castle Project License.xml" />
@@ -246,6 +247,7 @@
     <EmbeddedResource Include="License\12. Akka.Net License.xml" />
     <EmbeddedResource Include="License\13. Language-Ext License.xml" />
     <EmbeddedResource Include="License\14. Pri.LongPath License.xml" />
+    <EmbeddedResource Include="License\15. CsvHelper License.xml" />
     <Content Include="NCmdLiner.ico" />
     <Content Include="References.txt" />
   </ItemGroup>
